@@ -1,16 +1,21 @@
 import java.util.Date;
+import com.sothawo.mapjfx.Coordinate;
 
 public class Event{
     Date startTime,endTime;
     String name, desc;
+    Coordinate location;
 
-    public Event(Date startTime, Date endTime, String name, String desc){
+    public Event(Date startTime, Date endTime, String name, String desc, Coordinate location){
         this.startTime = startTime;
         this.endTime = endTime;
         this.name = name;
         this.desc = desc;
+        this.location = location;
 
-
+    }
+    public void setLocation(Coordinate location) {
+    		this.location = location;
     }
 
     public void setStartTime(Date startTime) {
@@ -27,6 +32,10 @@ public class Event{
 
     public String getDesc() {
         return desc;
+    }
+    
+    public Coordinate getLocation() {
+    		return location;
     }
 
     public Date getEndTime() {
