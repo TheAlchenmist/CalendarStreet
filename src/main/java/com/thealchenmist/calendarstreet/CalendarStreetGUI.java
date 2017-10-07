@@ -5,13 +5,13 @@ import javafx.stage.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.event.*;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 
 public class CalendarStreetGUI extends Application{
 
 	BorderPane mainPane;
-	GridPane calPane;
-	HBox togglePane;
+	GridPane calPane, togglePane;
 	VBox eventsPane;
 	Button addEventButton;
 	Label calStrLabel, myEventsLabel, nearbyEvLabel;
@@ -32,14 +32,22 @@ public class CalendarStreetGUI extends Application{
 		calStrLabel.setFont(Font.font("Cambria", 24));
 		myEventsLabel = new Label("ME");
 		nearbyEvLabel = new Label("NEARBY");
+		myEventsLabel.setAlignment(Pos.CENTER);
 		
-		togglePane = new HBox();
-		togglePane.getChildren().addAll(myEventsLabel, nearbyEvLabel);
+		togglePane = new GridPane();
+		togglePane.add(myEventsLabel, 0, 0);
+		togglePane.add(nearbyEvLabel, 1, 0);
+		togglePane.setHgap(20);
+		togglePane.setPrefWidth(calPane.getPrefWidth());
+		togglePane.setAlignment(Pos.CENTER);
+		togglePane.setGridLinesVisible(true);
 		
 		eventsPane = new VBox();
+		eventsPane.setPrefSize(calPane.getPrefWidth()-10, sceneHeight-100);
 		scrollPane = new ScrollPane(eventsPane);
 		
 		addEventButton = new Button("+");
+		addEventButton.setPrefWidth(calPane.getPrefWidth());
 		
 		calPane.add(calStrLabel, 0, 0);
 		calPane.add(togglePane, 0, 1);
@@ -47,7 +55,7 @@ public class CalendarStreetGUI extends Application{
 		calPane.add(addEventButton, 0, 3);
 		
 		Scene scene = new Scene(mainPane, sceneWidth, sceneHeight);
-		primaryStage.setTitle("Interest Table Calculator");
+		primaryStage.setTitle("Calendar Street");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
