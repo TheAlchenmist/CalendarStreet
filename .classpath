@@ -3,6 +3,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src/main/java/com/thealchenmist/calendarstreet"/>
 	<classpathentry kind="lib" path="libs/mapjfx-1.13.2.jar"/>
-	<classpathentry kind="lib" path="/Users/josh/Desktop/Projects/UMBC Hackathon/CalendarStreet/libs/json-20170516.jar"/>
+	<classpathentry kind="lib" path="/Users/josh/Desktop/Projects/UMBC Hackathon/CalendarStreet/libs/json-simple-1.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
