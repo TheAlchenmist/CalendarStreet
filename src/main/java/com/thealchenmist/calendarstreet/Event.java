@@ -1,6 +1,12 @@
 import java.util.Date;
 import com.sothawo.mapjfx.Coordinate;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+
 public class Event{
     Date startTime,endTime;
     String name, desc;
@@ -14,6 +20,13 @@ public class Event{
         this.location = location;
 
     }
+    
+    public static Coordinate geocode(String search) {
+    		JSONParser parser = new JSONParser();
+    		Object file = parser.parse(new FileReader("hi"));
+    		return new Coordinate(null,null);
+    }
+    
     public void setLocation(Coordinate location) {
     		this.location = location;
     }
