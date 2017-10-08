@@ -9,12 +9,12 @@ hectic college life of students in mind with their various events and social act
 
 CalenderStreet overall is a calendar-map hybrid designed to allow visualization of one's schedule.
 
-#OpenStreetMap
+# OpenStreetMap
 https://www.openstreetmap.org/#map=18/38.98703/-76.94432
 OpenStreetMap is an open data aerial map that gives data not only on roads but also on sidewalks and
 bus routes. This allows us freedom in map control and pursue further concepts such as calculating
 walking distances.
 
-#mapjfx
+# mapjfx
 https://github.com/sothawo/mapjfx
 mapjfx is a project that utilizes OpenLayers to create dynamic maps with customizability and additions to its geographical content.
