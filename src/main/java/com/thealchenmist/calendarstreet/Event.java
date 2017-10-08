@@ -13,6 +13,7 @@ import java.io.*;
 public class Event implements Comparable<Event> {
 
 	// Note that Date is a Java given object with year to minutes
+	private int id;
 	private Date startTime, endTime;
 	private String name, desc, address;
 	private Coordinate location;
@@ -55,6 +56,14 @@ public class Event implements Comparable<Event> {
 		geoIs.close();
 		
 		return new Coordinate(lattitude, longitude);
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int newId) {
+		id = newId;
 	}
 
 	public void setLocation(Coordinate location) {

@@ -19,14 +19,18 @@ public class CalendarStreetGUI extends Application {
     Schedule schedule = new Schedule();
     private VBox myEventsPane;
 
-    public Marker addMarker(Coordinate position) {
+    public Marker addMarker(Coordinate position, String title) {
         Marker newMarker = Marker.createProvided(Provided.RED)
                                  .setPosition(position)
                                  .setVisible(true);
         mapPane.addMarker(newMarker);
+        
+        MapLabel label = new MapLabel(title, 10, -10);
+        label.setVisible(true);
+        newMarker.attachLabel(label); //this works in my head but not irl idk 
         markers.add(newMarker);
+        
         resizeMap();
-
         return newMarker;
     }
 
@@ -53,9 +57,16 @@ public class CalendarStreetGUI extends Application {
     public void updateMyEvents() {
     		markers.clear();
     		myEventsPane.getChildren().clear();
-		for(Event e: schedule) {
-			myEventsPane.getChildren().add(new EventSlot(e));
-			addMarker(e.getLocation());
+		for (int i = 0; i < schedule.size(); i++) {
+			EventSlot eventSlot = new EventSlot(schedule.get(i));
+			eventSlot.setOnMouseClicked(e -> {
+				new NewEventWindow(event -> {
+					schedule.update(event);
+					updateMyEvents();
+				});
+			});
+			myEventsPane.getChildren().add(eventSlot);
+			addMarker(schedule.get(i).getLocation(),schedule.get(i).getName());
 		}
     }
    

@@ -18,4 +18,12 @@ public class Schedule extends LinkedList<Event> {
         }
         return added;
     }
+    
+    public void update(Event e) {
+    		for (int i = 0; i < this.size(); i++) {
+    			if (e.getId() == this.get(i).getId()) {
+    				this.set(i, e);
+    			}
+    		}
+    }
 }
