@@ -17,6 +17,9 @@ public class tests {
 		System.out.println(anneArundel.getLatitude()+" "+anneArundel.getLongitude());
 		assertEquals("", 38.98594005, anneArundel.getLatitude(), .0000001);
 		assertEquals("", -76.94673185, anneArundel.getLongitude(), .0000001);
+		
+		Database.connectToDatabase();
 	}
+	
 
 }
