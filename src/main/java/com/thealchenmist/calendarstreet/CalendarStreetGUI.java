@@ -47,6 +47,7 @@ public class CalendarStreetGUI extends Application {
     }
 
     public void removeMarker(Marker marker) {
+        marker.detachLabel();
         mapPane.removeMarker(marker);
         markers.remove(marker);
         resizeMap();
@@ -67,6 +68,7 @@ public class CalendarStreetGUI extends Application {
 
     }
     public void updateMyEvents() {
+        for (Marker marker : markers) mapPane.removeMarker(marker);
         markers.clear();
         myEventsPane.getChildren().clear();
 		for (int i = 0; i < schedule.size(); i++) {
@@ -78,11 +80,11 @@ public class CalendarStreetGUI extends Application {
 					schedule.update(event);
 				}).setOnHiding(f -> updateMyEvents());
 			});
-			eventSlot.setOnMouseEntered(e->{
-				displayTempMarker(eventSlot.event.getLocation());
-			});
-			eventSlot.setOnMouseExited(e->{
-				hideTempMarker();
+            eventSlot.setOnMouseEntered(e -> {
+                displayTempMarker(eventSlot.event.getLocation());
+            });
+            eventSlot.setOnMouseExited(e -> {
+                hideTempMarker();
 			});
 			myEventsPane.getChildren().add(eventSlot);
 			addMarker(schedule.get(i).getLocation(),schedule.get(i).getName());
