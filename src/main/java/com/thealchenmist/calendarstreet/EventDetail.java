@@ -16,13 +16,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.function.Consumer;
 
-public class NewEventWindow extends Stage{
+public class EventDetail extends Stage{
 	
 	private TextField title, startTime, endTime, startDay, endDay, startYear, endYear, address;
 	private TextArea description;
 	private Consumer<Event> addEvent;
 	
-	public NewEventWindow(Event editing, Consumer<Event> updateEvent) {
+	public EventDetail(Event editing, Consumer<Event> updateEvent) {
 		this(updateEvent);
 		
 		title.setText(editing.getName());
@@ -34,18 +34,18 @@ public class NewEventWindow extends Stage{
 		Calendar startCal = Calendar.getInstance();
 		startCal.setTime(editing.getStartTime());
 		startDay.setText("" + startCal.get(Calendar.DAY_OF_MONTH)); 
-		startYear.setText("" + startCal.get(Calendar.YEAR));
+		startYear.setText("" + (startCal.get(Calendar.YEAR) - 2000));
 		
 		Calendar endCal = Calendar.getInstance();
 		endCal.setTime(editing.getEndTime());
 		endDay.setText("" + endCal.get(Calendar.DAY_OF_MONTH)); 
-		endYear.setText("" + endCal.get(Calendar.YEAR));
+		endYear.setText("" + (endCal.get(Calendar.YEAR) - 2000));
 		
 		address.setText(editing.getAddress());
 		description.setText(editing.getDesc());
 	}
 	
-	public NewEventWindow(Consumer<Event> addEvent) {
+	public EventDetail(Consumer<Event> addEvent) {
 		this.addEvent = addEvent;
 		this.setResizable(false);
 

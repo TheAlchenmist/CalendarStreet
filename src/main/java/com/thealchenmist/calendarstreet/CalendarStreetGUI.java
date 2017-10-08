@@ -1,4 +1,6 @@
 import javafx.application.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.stage.*;
@@ -16,19 +18,19 @@ public class CalendarStreetGUI extends Application {
     
     MapView mapPane;
     List<Marker> markers = new ArrayList<Marker>();
-    Schedule schedule = new Schedule();
+    Schedule schedule;
     private VBox myEventsPane;
 
     public Marker addMarker(Coordinate position, String title) {
         Marker newMarker = Marker.createProvided(Provided.RED)
                                  .setPosition(position)
                                  .setVisible(true);
-        mapPane.addMarker(newMarker);
         
         MapLabel label = new MapLabel(title, 10, -10);
         label.setVisible(true);
         newMarker.attachLabel(label); //this works in my head but not irl idk 
         markers.add(newMarker);
+        mapPane.addMarker(newMarker);
         
         resizeMap();
         return newMarker;
@@ -47,20 +49,22 @@ public class CalendarStreetGUI extends Application {
             coords[i] = markers.get(i).getPosition();
 
         if (coords.length > 1) {
-        	    Extent wholeMap = Extent.forCoordinates(coords);
+            Extent wholeMap = Extent.forCoordinates(coords);
             mapPane.setExtent(wholeMap);
         } else {
-        	    mapPane.setCenter(coords[0]);
+            mapPane.setCenter(coords[0]);
         }
 
     }
     public void updateMyEvents() {
-    		markers.clear();
-    		myEventsPane.getChildren().clear();
+        markers.clear();
+        myEventsPane.getChildren().clear();
 		for (int i = 0; i < schedule.size(); i++) {
 			EventSlot eventSlot = new EventSlot(schedule.get(i));
 			eventSlot.setOnMouseClicked(e -> {
-				new NewEventWindow(event -> {
+			    Event oldEvent = ((EventSlot)e.getSource()).event;
+				new EventDetail(oldEvent, event -> {
+				    event.setId(oldEvent.getId());
 					schedule.update(event);
 					updateMyEvents();
 				});
@@ -73,8 +77,11 @@ public class CalendarStreetGUI extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		int sceneWidth = 800, sceneHeight = 500;
+		Database.connectToDatabase();
+		Database.createNewTable();
 		schedule = new Schedule();
+
+		int sceneWidth = 800, sceneHeight = 500;
 
 		// Main pane that lies in primary stage
 		BorderPane mainPane = new BorderPane();
@@ -141,7 +148,7 @@ public class CalendarStreetGUI extends Application {
 		addEventButton.setPrefWidth(calPane.getPrefWidth());
 		addEventButton.setAlignment(Pos.CENTER);
 		addEventButton.setOnAction(e -> {
-			new NewEventWindow(event -> {
+			new EventDetail(event -> {
 				schedule.add(event);
 				updateMyEvents();
 			});
@@ -151,6 +158,15 @@ public class CalendarStreetGUI extends Application {
 		calPane.add(togglePane, 0, 1);
 		calPane.add(myEvScrollPane, 0, 2);
 		calPane.add(addEventButton, 0, 3);
+		
+		mapPane.initializedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    updateMyEvents();
+                }
+            }
+		});
 
 		Scene scene = new Scene(mainPane, sceneWidth, sceneHeight);
 		primaryStage.setTitle("Calendar Street");
