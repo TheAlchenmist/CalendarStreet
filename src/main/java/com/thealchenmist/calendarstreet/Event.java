@@ -36,8 +36,8 @@ public class Event implements Comparable<Event> {
 	}
 
 	public static Coordinate geocode(String search) throws MalformedURLException, IOException, ParseException {
-		double lattitude = 0;
-		double longitude = 0;
+		double latitude, longitude;
+
 		String realString = convertString(search);
 		URL geoUrl = new URL("http://nominatim.openstreetmap.org/search.php?q=" + realString + "&format=json");
 		InputStream geoIs = geoUrl.openStream();
@@ -48,27 +48,27 @@ public class Event implements Comparable<Event> {
 
 		JSONParser geoParser = new JSONParser();
 		JSONArray newArray = (JSONArray) geoParser.parse(geoString);
-		try{
+
+		try {
 			String objLat = (String) ((JSONObject) newArray.get(0)).get("lat");
 			String objLon = (String) ((JSONObject) newArray.get(0)).get("lon");
-			
-			lattitude = Double.parseDouble(objLat);
+
+			latitude = Double.parseDouble(objLat);
 			longitude = Double.parseDouble(objLon);
-		}catch(IndexOutOfBoundsException e) {
-			System.out.println(e);
+		} catch (IndexOutOfBoundsException e) {
+			throw new IllegalArgumentException();
+		} finally {
+			geoScanner.close();
+			geoIs.close();
 		}
 
-		
-		geoScanner.close();
-		geoIs.close();
-		
-		return new Coordinate(lattitude, longitude);
+		return new Coordinate(latitude, longitude);
 	}
-	
+
 	public int getId() {
 		return id;
 	}
-	
+
 	public void setId(int newId) {
 		id = newId;
 	}
