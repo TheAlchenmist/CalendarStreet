@@ -73,7 +73,6 @@ public class CalendarStreetGUI extends Application {
 			addMarker(schedule.get(i).getLocation(),schedule.get(i).getName());
 		}
     }
-   
 
 	@Override
 	public void start(Stage primaryStage) {
