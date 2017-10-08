@@ -15,6 +15,7 @@ public class CalendarStreetGUI extends Application {
     
     MapView mapPane;
     List<Marker> markers;
+    Schedule schedule;
 
     public Marker addMarker(Coordinate position) {
         Marker newMarker = Marker.createProvided(Provided.RED)
@@ -45,6 +46,7 @@ public class CalendarStreetGUI extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		int sceneWidth = 800, sceneHeight = 500;
+		schedule = new Schedule();
 
 		// Main pane that lies in primary stage
 		BorderPane mainPane = new BorderPane();
@@ -112,7 +114,10 @@ public class CalendarStreetGUI extends Application {
 		addEventButton.setPrefWidth(calPane.getPrefWidth());
 		addEventButton.setAlignment(Pos.CENTER);
 		addEventButton.setOnAction(e -> {
-			new newEventWindow();
+			new newEventWindow(event -> {
+				schedule.add(event);
+			});
+
 		});
 
 		calPane.add(calStrLabel, 0, 0);

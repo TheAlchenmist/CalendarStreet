@@ -4,18 +4,28 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.function.Consumer;
 
 public class newEventWindow extends Stage{
 	
 	private TextField title, startTime, endTime, startDay, endDay, startYear, endYear, address;
+	private TextArea description;
+	private Consumer<Event> addEvent;
 	
-	public newEventWindow() {
-		int sceneWidth = 393, sceneHeight = 250;
+	public newEventWindow(Consumer<Event> addEvent) {
+		this.addEvent = addEvent;
+		this.setResizable(false);
+
+		int sceneWidth = 393, sceneHeight = 350;
 		int verSpaceBetweenNodes = 5, horSpaceBetweenNodes = 5;
 		int paneBorderTop = 5, paneBorderRight = 10;
 		int paneBorderBottom = 5, paneBorderLeft = 7;
@@ -34,6 +44,10 @@ public class newEventWindow extends Stage{
 		Label titleLabel = new Label("Event Name:");
 		title = new TextField();
 		
+		Label descrLabel = new Label("Description:");
+		description = new TextArea();
+		description.setWrapText(true);
+
 		ObservableList<String> opts = 
 			    FXCollections.observableArrayList(
 			        "AM",
@@ -111,27 +125,71 @@ public class newEventWindow extends Stage{
 		
 		Button done = new Button("Done");
 		done.setOnAction(e -> {
+			Calendar cal = Calendar.getInstance();
+
+			//startDate string
+			String times[] = startTime.getText().split(":");
+			cal.set(Integer.parseInt("20" + startYear.getText()),
+					options.indexOf(startMonth.getValue()),
+					Integer.parseInt(startDay.getText()),
+					Integer.parseInt(times[0]),
+					(times.length > 1) ? Integer.parseInt(times[1]) : 0);
+
+			Date startDate = cal.getTime();
 			
+			//endDate string
+			times = endTime.getText().split(":");
+			cal.set(Integer.parseInt("20" + endYear.getText()),
+					options.indexOf(endMonth.getValue()),
+					Integer.parseInt(endDay.getText()),
+					Integer.parseInt(times[0]),
+					(times.length > 1) ? Integer.parseInt(times[1]) : 0);
+
+			Date endDate = cal.getTime();
+
+			/*System.out.println(startDateString.toString());
+			System.out.println(endDateString.toString());
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error Dialog");
+			alert.setContentText("Please enter correct date.");
+			alert.showAndWait();
+			return;*/
+
+			Event event;
+			try {
+				event = new Event(startDate, endDate, title.getText(),
+									    description.getText(), address.getText(), 
+									    Event.geocode(address.getText()));
+			} catch (IOException | org.json.simple.parser.ParseException e1) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Dialog");
+				alert.setContentText("Address not found.");
+				alert.showAndWait();
+				return;
+			}
+			this.addEvent.accept(event);
 		});
 		Button cancel = new Button("Cancel");
 		cancel.setOnAction(e -> {
-			
+			this.close();
 		});
 		
 		pane.add(titleLabel, 0, 0);
 		pane.add(title, 1, 0);
-		pane.add(startTimeLabel, 0, 1);
-		pane.add(startPane, 1, 1);
-		pane.add(endTimeLabel, 0, 2);
-		pane.add(endPane, 1, 2);
-		pane.add(startDateLabel, 0, 3);
-		pane.add(startDateSelect, 1, 3);
-		pane.add(endDateLabel, 0, 4);
-		pane.add(endDateSelect, 1, 4);
-		pane.add(addressLabel, 0, 5);
-		pane.add(address, 1, 5);
-		pane.add(done, 1, 6);
-		pane.add(cancel, 0, 6);
+		pane.add(descrLabel, 0, 1);
+		pane.add(description, 1, 1);
+		pane.add(startTimeLabel, 0, 2);
+		pane.add(startPane, 1, 2);
+		pane.add(endTimeLabel, 0, 3);
+		pane.add(endPane, 1, 3);
+		pane.add(startDateLabel, 0, 4);
+		pane.add(startDateSelect, 1, 4);
+		pane.add(endDateLabel, 0, 5);
+		pane.add(endDateSelect, 1, 5);
+		pane.add(addressLabel, 0, 6);
+		pane.add(address, 1, 6);
+		pane.add(done, 1, 7);
+		pane.add(cancel, 0, 7);
 		
 		GridPane.setHalignment(done, HPos.CENTER);
 		GridPane.setHalignment(cancel, HPos.CENTER);
@@ -141,6 +199,5 @@ public class newEventWindow extends Stage{
 		this.setScene(scene);
 		this.show();
 	}
-	
 	
 }
