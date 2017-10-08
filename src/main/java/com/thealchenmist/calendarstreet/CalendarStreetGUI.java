@@ -16,13 +16,6 @@ public class CalendarStreetGUI extends Application {
     MapView mapPane;
     List<Marker> markers;
 
-	private BorderPane mainPane;
-	private GridPane calPane, togglePane;
-	private VBox myEventsPane, nearbyEventsPane;
-	private Button addEventButton,myEventsButton,nearbyEvButton;
-	private Label calStrLabel;
-	ScrollPane myEvScrollPane, nearbyEvScrollPane;
-	
     public Marker addMarker(Coordinate position) {
         Marker newMarker = Marker.createProvided(Provided.RED)
                                  .setPosition(position)
@@ -50,12 +43,13 @@ public class CalendarStreetGUI extends Application {
     }
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage primaryStage) {
 		int sceneWidth = 800, sceneHeight = 500;
-		int verSpaceBetweenNodes = 8, horSpaceBetweenNodes = 8;
 
-		mainPane = new BorderPane();
+		// Main pane that lies in primary stage
+		BorderPane mainPane = new BorderPane();
 		
+		// Left-side map frame and details
         mapPane = new MapView();
         mapPane.setCenter(new Coordinate(38.98598265, -76.9483238568247));
         BorderPane.setAlignment(mapPane, Pos.CENTER);
@@ -64,32 +58,48 @@ public class CalendarStreetGUI extends Application {
         mapPane.setZoom(18);
         mapPane.initialize();
 		
-		calPane = new GridPane(); // pane for calendar toggling and event displaying
+        
+        // Right-side calendar and events pane
+		GridPane calPane = new GridPane();
 		calPane.setAlignment(Pos.TOP_CENTER);
 		calPane.setPrefSize(200, 500);
 		mainPane.setLeft(calPane);
 
-		calStrLabel = new Label("Calendar Street");
+		// App name and events setting
+		Label calStrLabel = new Label("Calendar Street");
 		calStrLabel.setFont(Font.font("Cambria", 24));
 		calStrLabel.setPrefWidth(calPane.getPrefWidth());
 		calStrLabel.setAlignment(Pos.CENTER);
-		myEventsButton = new Button("ME");
-		nearbyEvButton = new Button("NEARBY");
+		Button myEventsButton = new Button("ME");
+		Button nearbyEvButton = new Button("NEARBY");
 		myEventsButton.setAlignment(Pos.CENTER);
 		nearbyEvButton.setAlignment(Pos.CENTER);
 
-		togglePane = new GridPane();
+		// Two events panes: my events and nearby events, for calendar pane
+		VBox myEventsPane = new VBox();
+		myEventsPane.getChildren().add(new Label("my events"));
+		myEventsPane.setPrefSize(calPane.getPrefWidth() - 10, sceneHeight - 86);
+		ScrollPane myEvScrollPane = new ScrollPane(myEventsPane);
+		VBox nearbyEventsPane = new VBox();
+		nearbyEventsPane.getChildren().add(new Label("nearby events"));
+		nearbyEventsPane.setPrefSize(calPane.getPrefWidth() - 10, sceneHeight - 86);
+		ScrollPane nearbyEvScrollPane = new ScrollPane(nearbyEventsPane);
+
+		// Toggles the two above event panes
+		GridPane togglePane = new GridPane();
 		togglePane.add(myEventsButton, 0, 0);
 		togglePane.add(nearbyEvButton, 1, 0);
 		myEventsButton.setPrefWidth(calPane.getPrefWidth()/2);
-		myEventsButton.setOnAction(e -> { //replaces nearby events pane with my events pane
+		myEventsButton.setOnAction(e -> {
+            // Replaces nearby events pane with my events pane
 			if(calPane.getChildren().contains(nearbyEvScrollPane)) {
 				calPane.getChildren().remove(nearbyEvScrollPane);
 				calPane.add(myEvScrollPane, 0, 2);
 			}
 		});
 		nearbyEvButton.setPrefWidth(calPane.getPrefWidth()/2);
-		nearbyEvButton.setOnAction(e -> { //replaces my events pane with nearby events pane
+		nearbyEvButton.setOnAction(e -> {
+            // Replaces my events pane with nearby events pane
 			if(calPane.getChildren().contains(myEvScrollPane)) {
 				calPane.getChildren().remove(myEvScrollPane);
 				calPane.add(nearbyEvScrollPane, 0, 2);
@@ -98,16 +108,8 @@ public class CalendarStreetGUI extends Application {
 		togglePane.setPrefWidth(calPane.getPrefWidth());
 		togglePane.setAlignment(Pos.CENTER);
 		
-		myEventsPane = new VBox();
-		myEventsPane.getChildren().add(new Label("my events"));
-		myEventsPane.setPrefSize(calPane.getPrefWidth() - 10, sceneHeight - 86);
-		myEvScrollPane = new ScrollPane(myEventsPane);
-		nearbyEventsPane = new VBox();
-		nearbyEventsPane.getChildren().add(new Label("nearby events"));
-		nearbyEventsPane.setPrefSize(calPane.getPrefWidth() - 10, sceneHeight - 86);
-		nearbyEvScrollPane = new ScrollPane(nearbyEventsPane);
-
-		addEventButton = new Button("+");
+		// Add event button
+		Button addEventButton = new Button("+");
 		addEventButton.setPrefWidth(calPane.getPrefWidth());
 		addEventButton.setAlignment(Pos.CENTER);
 
