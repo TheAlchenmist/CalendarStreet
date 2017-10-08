@@ -15,13 +15,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.function.Consumer;
 
-public class newEventWindow extends Stage{
+public class NewEventWindow extends Stage{
 	
 	private TextField title, startTime, endTime, startDay, endDay, startYear, endYear, address;
 	private TextArea description;
 	private Consumer<Event> addEvent;
 	
-	public newEventWindow(Consumer<Event> addEvent) {
+	public NewEventWindow(Consumer<Event> addEvent) {
 		this.addEvent = addEvent;
 		this.setResizable(false);
 

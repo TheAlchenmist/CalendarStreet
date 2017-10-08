@@ -114,7 +114,7 @@ public class CalendarStreetGUI extends Application {
 		addEventButton.setPrefWidth(calPane.getPrefWidth());
 		addEventButton.setAlignment(Pos.CENTER);
 		addEventButton.setOnAction(e -> {
-			new newEventWindow(event -> {
+			new NewEventWindow(event -> {
 				schedule.add(event);
 			});
 
