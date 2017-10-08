@@ -1,10 +1,11 @@
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
@@ -36,18 +37,24 @@ public class EventSlot extends GridPane {
 		
 		Stage stage = new Stage();
 		stage.setTitle("Description");
-		this.setOnMouseEntered((MouseEvent t) -> {
+		this.setOnMouseEntered(e -> {
+		    // Fill with event description
 			TextArea text = new TextArea(event.getDesc());
 			text.setWrapText(true);
-			Scene scene = new Scene(text, 300, 200);
+
+			// Create scene and add mouse exit code
+			Scene scene = new Scene(text, 200, 100);
+			scene.setOnMouseExited(f -> stage.close());
 			stage.setScene(scene);
-//			stage.setX(400); //idunno what to put here to make it NOT AWKWARD
-//			stage.setY(500);
+			
+			// Center above and to the right of EventSlot
+			Bounds location = this.localToScreen(this.getBoundsInLocal());
+			stage.setX(location.getMaxX() / 2 + this.getWidth() * 1.2);
+			stage.setY(location.getMaxY() / 2);
+
 			stage.show();
 		});
-		this.setOnMouseExited((MouseEvent t) -> {
-			stage.close();
-		});
+		this.setOnMouseExited(e -> stage.close());
 		
 		this.getColumnConstraints().add(new ColumnConstraints(185));
 		this.setPadding(new Insets(5,5,5,5));
