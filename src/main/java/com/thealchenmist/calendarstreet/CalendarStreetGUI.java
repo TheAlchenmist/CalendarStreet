@@ -66,8 +66,7 @@ public class CalendarStreetGUI extends Application {
 				new EventDetail(oldEvent, event -> {
 				    event.setId(oldEvent.getId());
 					schedule.update(event);
-					updateMyEvents();
-				});
+				}).setOnHiding(f -> updateMyEvents());
 			});
 			myEventsPane.getChildren().add(eventSlot);
 			addMarker(schedule.get(i).getLocation(),schedule.get(i).getName());
