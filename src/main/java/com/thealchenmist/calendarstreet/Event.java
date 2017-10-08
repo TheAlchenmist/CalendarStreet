@@ -1,10 +1,15 @@
 import java.util.Date;
+import java.util.Scanner;
 import com.sothawo.mapjfx.Coordinate;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import java.net.*;
+import java.nio.charset.Charset;
+import java.io.*;
 
 
 public class Event{
@@ -21,9 +26,17 @@ public class Event{
 
     }
     
-    public static Coordinate geocode(String search) {
+    public static Coordinate geocode(String search) throws MalformedURLException,IOException {
     		JSONParser parser = new JSONParser();
-    		Object file = parser.parse(new FileReader("hi"));
+    		URL geoUrl = new URL("http://nominatim.openstreetmap.org/search?" + search+"&format=json");
+    		
+    		URLConnection geoUrlc = geoUrl.openConnection();
+    		InputStream geoIs = geoUrl.openStream();
+    		// BufferedReader geoRead = new BufferedReader(new InputStreamReader(geoIs,Charset.forName("UTF-8")));
+    		Scanner geoScanner = new Scanner(geoIs).useDelimiter("\\A");
+    		String geoString = geoScanner.hasNext() ? geoScanner.next():"";
+    		
+    		
     		return new Coordinate(null,null);
     }
     
