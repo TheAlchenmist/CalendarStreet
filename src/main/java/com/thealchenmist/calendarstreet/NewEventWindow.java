@@ -11,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.function.Consumer;
@@ -20,6 +21,29 @@ public class NewEventWindow extends Stage{
 	private TextField title, startTime, endTime, startDay, endDay, startYear, endYear, address;
 	private TextArea description;
 	private Consumer<Event> addEvent;
+	
+	public NewEventWindow(Event editing, Consumer<Event> updateEvent) {
+		this(updateEvent);
+		
+		title.setText(editing.getName());
+		
+		SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm");
+		startTime.setText(localDateFormat.format(editing.getStartTime()));
+		endTime.setText(localDateFormat.format(editing.getEndTime()));
+		
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(editing.getStartTime());
+		startDay.setText("" + startCal.get(Calendar.DAY_OF_MONTH)); 
+		startYear.setText("" + startCal.get(Calendar.YEAR));
+		
+		Calendar endCal = Calendar.getInstance();
+		endCal.setTime(editing.getEndTime());
+		endDay.setText("" + endCal.get(Calendar.DAY_OF_MONTH)); 
+		endYear.setText("" + endCal.get(Calendar.YEAR));
+		
+		address.setText(editing.getAddress());
+		description.setText(editing.getDesc());
+	}
 	
 	public NewEventWindow(Consumer<Event> addEvent) {
 		this.addEvent = addEvent;
@@ -129,7 +153,7 @@ public class NewEventWindow extends Stage{
 
 			//startDate string
 			String times[] = startTime.getText().split(":");
-			cal.set(Integer.parseInt("20" + startYear.getText()),
+			cal.set(Integer.parseInt("20" + (Integer.parseInt(startYear.getText()) < 10 ? "0" + startYear.getText() : startYear.getText())),
 					options.indexOf(startMonth.getValue()),
 					Integer.parseInt(startDay.getText()),
 					Integer.parseInt(times[0]),
@@ -139,7 +163,7 @@ public class NewEventWindow extends Stage{
 			
 			//endDate string
 			times = endTime.getText().split(":");
-			cal.set(Integer.parseInt("20" + endYear.getText()),
+			cal.set(Integer.parseInt("20" + (Integer.parseInt(endYear.getText()) < 10 ? "0" + endYear.getText() : endYear.getText())),
 					options.indexOf(endMonth.getValue()),
 					Integer.parseInt(endDay.getText()),
 					Integer.parseInt(times[0]),
@@ -158,8 +182,8 @@ public class NewEventWindow extends Stage{
 			Event event;
 			try {
 				event = new Event(startDate, endDate, title.getText(),
-									    description.getText(), address.getText(), 
-									    Event.geocode(address.getText()));
+								  description.getText(), address.getText(), 
+								  Event.geocode(address.getText()));
 			} catch (IOException | org.json.simple.parser.ParseException e1) {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error Dialog");

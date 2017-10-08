@@ -1,4 +1,6 @@
 import javafx.application.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.stage.*;
@@ -6,6 +8,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.geometry.Pos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.sothawo.mapjfx.*;
@@ -14,17 +17,22 @@ import com.sothawo.mapjfx.Marker.Provided;
 public class CalendarStreetGUI extends Application {
     
     MapView mapPane;
-    List<Marker> markers;
+    List<Marker> markers = new ArrayList<Marker>();
     Schedule schedule;
+    private VBox myEventsPane;
 
-    public Marker addMarker(Coordinate position) {
+    public Marker addMarker(Coordinate position, String title) {
         Marker newMarker = Marker.createProvided(Provided.RED)
                                  .setPosition(position)
                                  .setVisible(true);
-        mapPane.addMarker(newMarker);
+        
+        MapLabel label = new MapLabel(title, 10, -10);
+        label.setVisible(true);
+        newMarker.attachLabel(label); //this works in my head but not irl idk 
         markers.add(newMarker);
+        mapPane.addMarker(newMarker);
+        
         resizeMap();
-
         return newMarker;
     }
 
@@ -34,19 +42,44 @@ public class CalendarStreetGUI extends Application {
         resizeMap();
     }
 
+    // TODO: resizing map with zero markers will raise Illegal Argument
     private void resizeMap() {
         Coordinate coords[] = new Coordinate[markers.size()];
         for (int i = 0; i < coords.length; i++)
             coords[i] = markers.get(i).getPosition();
-        Extent wholeMap = Extent.forCoordinates(coords);
 
-        mapPane.setExtent(wholeMap);
+        if (coords.length > 1) {
+        	    Extent wholeMap = Extent.forCoordinates(coords);
+            mapPane.setExtent(wholeMap);
+        } else {
+        	    mapPane.setCenter(coords[0]);
+        }
+
     }
+    public void updateMyEvents() {
+    		markers.clear();
+    		myEventsPane.getChildren().clear();
+		for (int i = 0; i < schedule.size(); i++) {
+			EventSlot eventSlot = new EventSlot(schedule.get(i));
+			eventSlot.setOnMouseClicked(e -> {
+				new NewEventWindow(event -> {
+					schedule.update(event);
+					updateMyEvents();
+				});
+			});
+			myEventsPane.getChildren().add(eventSlot);
+			addMarker(schedule.get(i).getLocation(),schedule.get(i).getName());
+		}
+    }
+   
 
 	@Override
 	public void start(Stage primaryStage) {
-		int sceneWidth = 800, sceneHeight = 500;
+		Database.connectToDatabase();
+		Database.createNewTable();
 		schedule = new Schedule();
+
+		int sceneWidth = 800, sceneHeight = 500;
 
 		// Main pane that lies in primary stage
 		BorderPane mainPane = new BorderPane();
@@ -77,8 +110,7 @@ public class CalendarStreetGUI extends Application {
 		nearbyEvButton.setAlignment(Pos.CENTER);
 
 		// Two events panes: my events and nearby events, for calendar pane
-		VBox myEventsPane = new VBox();
-		myEventsPane.getChildren().add(new Label("my events"));
+		myEventsPane = new VBox();
 		myEventsPane.setPrefSize(calPane.getPrefWidth() - 10, sceneHeight - 86);
 		ScrollPane myEvScrollPane = new ScrollPane(myEventsPane);
 		VBox nearbyEventsPane = new VBox();
@@ -116,14 +148,23 @@ public class CalendarStreetGUI extends Application {
 		addEventButton.setOnAction(e -> {
 			new NewEventWindow(event -> {
 				schedule.add(event);
+				updateMyEvents();
 			});
-
 		});
 
 		calPane.add(calStrLabel, 0, 0);
 		calPane.add(togglePane, 0, 1);
 		calPane.add(myEvScrollPane, 0, 2);
 		calPane.add(addEventButton, 0, 3);
+		
+		mapPane.initializedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    updateMyEvents();
+                }
+            }
+		});
 
 		Scene scene = new Scene(mainPane, sceneWidth, sceneHeight);
 		primaryStage.setTitle("Calendar Street");
