@@ -58,41 +58,50 @@ public class Database {
 		String sql = "CREATE TABLE IF NOT EXISTS Events (\n"
 				+ "name text PRIMARY KEY, \n"
 				+ "Description text, \n"
-				+ "StartTime blob NOT NULL, \n"
-				+ "EndTime blob NOT NULL, \n"
+				+ "StartTime blob, \n"
+				+ "EndTime blob, \n"
 				+ "Coordinates blob, \n"
-				+ "Address text, \n"
+				+ "Address text \n"
 				+");";
 		try (Connection conn = DriverManager.getConnection(url);
                 Statement stmt = conn.createStatement()) {
             // create a new table
             stmt.execute(sql);
+            System.out.println("MAde it");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 	}
 	
 	//PASS ONLY EVENTS OBJECT????!?!
-	public void insertEvent(Date startTime, Date endTime, String name, String desc, String address, Coordinate location) {
+	public static void insertEvent(Date startTime, Date endTime, String Name, String desc, String address, Coordinate location) {
+		String url = "jdbc:sqlite:event.db";
 		String sql = "INSERT INTO Events(name,Description,StartTime,EndTime,Coordinates,Address)"
-				+" VALUES(name,desc,startTime,endTime,location,address)";
-		try (Connection conn = this.connect();
+				+" VALUES(?,?,?,?,?,?)";
+		try (Connection conn = DriverManager.getConnection(url);
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.executeUpdate(); //didnt do set stuff see if this works
+            pstmt.setString(1, Name);
+            pstmt.setString(2, desc);
+            pstmt.setObject(3, startTime);
+            pstmt.setObject(4, endTime);
+            pstmt.setObject(5, location);
+            pstmt.setString(6, address);
+			pstmt.executeUpdate(); //didnt do set stuff see if this works
+            System.out.println("Created it");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 	}
 	
-	public void getEvent() {
+	public static void getEvent() {
 		String sql = "SELECT name, Description, StartTime, EndTime, Coordinates, Address FROM Events";
-		
-		try(Connection conn = this.connect();
+		String url = "jdbc:sqlite:event.db";
+		try(Connection conn = DriverManager.getConnection(url);
 				Statement stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(sql)){
 			while(rs.next()) {
 				//for debugging
-				 System.out.println(rs.getString("name"));
+				 System.out.println(rs.getString("hi"));
 			}
 		}catch(SQLException e) {
 			System.out.println(e.getMessage());;
@@ -100,22 +109,29 @@ public class Database {
 	}
 	
 	//PASS ONLY EVENTS OBJECT????!?!
-		public void updateEvent(Date startTime, Date endTime, String name, String desc, String address, Coordinate location) {
-			String sql = "UPDATE Events SET name=name, Description = desc ,"
-					+ "StartTime = startTime, EndTime = endTime,"
-					+ "Coordinates = location,Address = address";
-			try (Connection conn = this.connect();
+		public static void updateEvent(Date startTime, Date endTime, String name, String desc, String address, Coordinate location) {
+			String url = "jdbc:sqlite:event.db";
+			String sql = "UPDATE Events SET name=?, Description = ? ,"
+					+ "StartTime = ?, EndTime = ?,"
+					+ "Coordinates = ?,Address = ?";
+			try (Connection conn = DriverManager.getConnection(url);
 	                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	            pstmt.executeUpdate(); //didnt do set stuff see if this works
+				pstmt.setString(1, name);
+	            pstmt.setString(2, desc);
+	            pstmt.setObject(3, startTime);
+	            pstmt.setObject(4, endTime);
+	            pstmt.setObject(5, location);
+	            pstmt.setString(6, address);
+				pstmt.executeUpdate(); //didnt do set stuff see if this works
 	        } catch (SQLException e) {
 	            System.out.println(e.getMessage());
 	        }
 		}
 		
-		public void deleteEvent(String name) {
+		public static void deleteEvent(String name) {
 			String sql = "DELETE FROM Events WHERE name = name";
-			
-			try(Connection conn = this.connect();
+			String url = "jdbc:sqlite:event.db";
+			try(Connection conn = DriverManager.getConnection(url);
 					PreparedStatement pstmt = conn.prepareStatement(sql)){
 				pstmt.executeUpdate();
 			}catch(SQLException e) {

@@ -8,10 +8,12 @@ import org.json.simple.parser.ParseException;
 import com.sothawo.mapjfx.*;
 
 import org.junit.Test;
+import java.util.Date;
 
 public class tests {
 
 	@Test
+	
 	public void test() throws MalformedURLException, IOException, ParseException {
 		Coordinate anneArundel = Event.geocode("Anne Arundel Hall,College Park,Maryland");
 		System.out.println(anneArundel.getLatitude()+" "+anneArundel.getLongitude());
@@ -19,6 +21,14 @@ public class tests {
 		assertEquals("", -76.94673185, anneArundel.getLongitude(), .0000001);
 		
 		Database.connectToDatabase();
+		Database.createNewTable();
+		Date newDate = new Date(0,0,0,0,0);
+		Date oldDate = new Date(0,0,0,0,0);
+		String search = "Prince Frederick, College Park, Maryland";
+		Coordinate coor = Event.geocode(search);
+		Database.insertEvent(newDate,oldDate, "hi","meh",search,coor);
+		//Database.getEvent();
+		Database.updateEvent(newDate,oldDate, "hi","lol",search,coor);
 	}
 	
 
