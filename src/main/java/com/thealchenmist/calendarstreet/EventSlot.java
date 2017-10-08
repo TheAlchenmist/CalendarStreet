@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
@@ -39,26 +40,10 @@ public class EventSlot extends GridPane {
 		locationLabel = new Label(event.getAddress());
 		locationLabel.setWrapText(true);
 		
-		Stage stage = new Stage();
-		stage.setTitle("Description");
-		this.setOnMouseEntered(e -> {
-		    // Fill with event description
-			TextArea text = new TextArea(event.getDesc());
-			text.setWrapText(true);
-
-			// Create scene and add mouse exit code
-			Scene scene = new Scene(text, 200, 100);
-			scene.setOnMouseExited(f -> stage.close());
-			stage.setScene(scene);
-			
-			// Center above and to the right of EventSlot
-			Bounds location = this.localToScreen(this.getBoundsInLocal());
-			stage.setX(location.getMaxX() / 2 + this.getWidth() * 1.2);
-			stage.setY(location.getMaxY() / 2);
-
-			stage.show();
-		});
-		this.setOnMouseExited(e -> stage.close());
+		//tooltip
+		Tooltip tooltip = new Tooltip(event.getDesc());
+		tooltip.setWrapText(true);
+		Tooltip.install(this, tooltip);
 		
 		this.getColumnConstraints().add(new ColumnConstraints(185));
 		this.setPadding(new Insets(5,5,5,5));
