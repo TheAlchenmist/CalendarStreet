@@ -4,10 +4,17 @@ import javafx.scene.control.*;
 import javafx.stage.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import javafx.event.*;
 import javafx.geometry.Pos;
 
+import java.util.List;
+
+import com.sothawo.mapjfx.*;
+import com.sothawo.mapjfx.Marker.Provided;
+
 public class CalendarStreetGUI extends Application {
+    
+    MapView mapPane;
+    List<Marker> markers;
 
 	private BorderPane mainPane;
 	private GridPane calPane, togglePane;
@@ -15,6 +22,32 @@ public class CalendarStreetGUI extends Application {
 	private Button addEventButton,myEventsButton,nearbyEvButton;
 	private Label calStrLabel;
 	ScrollPane myEvScrollPane, nearbyEvScrollPane;
+	
+    public Marker addMarker(Coordinate position) {
+        Marker newMarker = Marker.createProvided(Provided.RED)
+                                 .setPosition(position)
+                                 .setVisible(true);
+        mapPane.addMarker(newMarker);
+        markers.add(newMarker);
+        resizeMap();
+
+        return newMarker;
+    }
+
+    public void removeMarker(Marker marker) {
+        mapPane.removeMarker(marker);
+        markers.remove(marker);
+        resizeMap();
+    }
+
+    private void resizeMap() {
+        Coordinate coords[] = new Coordinate[markers.size()];
+        for (int i = 0; i < coords.length; i++)
+            coords[i] = markers.get(i).getPosition();
+        Extent wholeMap = Extent.forCoordinates(coords);
+
+        mapPane.setExtent(wholeMap);
+    }
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -22,6 +55,15 @@ public class CalendarStreetGUI extends Application {
 		int verSpaceBetweenNodes = 8, horSpaceBetweenNodes = 8;
 
 		mainPane = new BorderPane();
+		
+        mapPane = new MapView();
+        mapPane.setCenter(new Coordinate(38.98598265, -76.9483238568247));
+        BorderPane.setAlignment(mapPane, Pos.CENTER);
+        mainPane.setCenter(mapPane);
+        
+        mapPane.setZoom(18);
+        mapPane.initialize();
+		
 		calPane = new GridPane(); // pane for calendar toggling and event displaying
 		calPane.setAlignment(Pos.TOP_CENTER);
 		calPane.setPrefSize(200, 500);
@@ -83,5 +125,4 @@ public class CalendarStreetGUI extends Application {
 	public static void main(String[] args) {
 		Application.launch(args);
 	}
-
 }
