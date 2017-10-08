@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
 import java.io.*;
 
 
-public class Event{
+public class Event implements Comparable<Event>{
     private Date startTime,endTime;
     private String name, desc, address;
     private Coordinate location;
@@ -95,4 +95,13 @@ public class Event{
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+	@Override
+	public int compareTo(Event e) {
+		if(startTime.compareTo(e.startTime)!=0) {
+			return startTime.compareTo(e.startTime);
+		} else {
+			return endTime.compareTo(e.endTime);
+		}
+	}
 }
