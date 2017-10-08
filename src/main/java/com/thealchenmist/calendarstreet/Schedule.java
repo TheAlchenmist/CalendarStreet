@@ -14,7 +14,6 @@ public class Schedule extends LinkedList<Event> {
                                            e.getDesc(),
                                            e.getAddress(),
                                            e.getLocation());
-        System.out.println(eventId);
         e.setId(eventId);
 
         boolean added = false;

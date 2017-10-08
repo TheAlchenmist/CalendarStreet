@@ -1,20 +1,13 @@
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import com.sothawo.mapjfx.Marker;
-import com.sothawo.mapjfx.Marker.Provided;
-
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
 
 public class EventSlot extends GridPane {
 	public Event event;
