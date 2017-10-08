@@ -3,6 +3,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -118,10 +120,15 @@ public class CalendarStreetGUI extends Application {
 		mainPane.setLeft(calPane);
 
 		// App name and events setting
-		Label calStrLabel = new Label("Calendar Street");
+		Image logo = new Image("MapUrDayLogo.png");
+		ImageView iv = new ImageView();
+		iv.setFitHeight(71);
+		iv.setFitWidth(200);
+		iv.setImage(logo);
+		/*Label calStrLabel = new Label("Calendar Street");
 		calStrLabel.setFont(Font.font("Cambria", 24));
 		calStrLabel.setPrefWidth(calPane.getPrefWidth());
-		calStrLabel.setAlignment(Pos.CENTER);
+		calStrLabel.setAlignment(Pos.CENTER);*/
 		Button myEventsButton = new Button("ME");
 		Button nearbyEvButton = new Button("NEARBY");
 		myEventsButton.setAlignment(Pos.CENTER);
@@ -170,7 +177,7 @@ public class CalendarStreetGUI extends Application {
 			});
 		});
 
-		calPane.add(calStrLabel, 0, 0);
+		calPane.add(iv, 0, 0);
 		calPane.add(togglePane, 0, 1);
 		calPane.add(myEvScrollPane, 0, 2);
 		calPane.add(addEventButton, 0, 3);
@@ -185,7 +192,7 @@ public class CalendarStreetGUI extends Application {
 		});
 
 		Scene scene = new Scene(mainPane, sceneWidth, sceneHeight);
-		primaryStage.setTitle("Calendar Street");
+		primaryStage.setTitle("MapUrDay");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
