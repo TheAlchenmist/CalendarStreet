@@ -167,7 +167,6 @@ public class NewEventWindow extends Stage{
 				alert.showAndWait();
 				return;
 			}
-			System.out.println("about to run addEvent");
 			this.addEvent.accept(event);
 			this.close();
 		});

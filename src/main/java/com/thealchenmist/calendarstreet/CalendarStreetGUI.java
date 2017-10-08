@@ -131,11 +131,8 @@ public class CalendarStreetGUI extends Application {
 		addEventButton.setAlignment(Pos.CENTER);
 		addEventButton.setOnAction(e -> {
 			new NewEventWindow(event -> {
-				System.out.println("ay");
 				schedule.add(event);
-				System.out.println("ohway");
 				updateMyEvents();
-				System.out.println("oh no");
 			});
 		});
 

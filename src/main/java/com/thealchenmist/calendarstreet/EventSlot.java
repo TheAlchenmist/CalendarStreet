@@ -1,12 +1,15 @@
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 
 public class EventSlot extends GridPane {
 	private Label titleLabel,timeLabel,dateLabel,locationLabel;
@@ -30,6 +33,21 @@ public class EventSlot extends GridPane {
 		
 		locationLabel = new Label(event.getAddress());
 		locationLabel.setWrapText(true);
+		
+		Stage stage = new Stage();
+		stage.setTitle("Description");
+		this.setOnMouseEntered((MouseEvent t) -> {
+			TextArea text = new TextArea(event.getDesc());
+			text.setWrapText(true);
+			Scene scene = new Scene(text, 300, 200);
+			stage.setScene(scene);
+//			stage.setX(400); //idunno what to put here to make it NOT AWKWARD
+//			stage.setY(500);
+			stage.show();
+		});
+		this.setOnMouseExited((MouseEvent t) -> {
+			stage.close();
+		});
 		
 		this.getColumnConstraints().add(new ColumnConstraints(185));
 		this.setPadding(new Insets(5,5,5,5));
