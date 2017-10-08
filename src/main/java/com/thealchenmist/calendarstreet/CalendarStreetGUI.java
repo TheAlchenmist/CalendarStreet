@@ -35,6 +35,16 @@ public class CalendarStreetGUI extends Application {
         resizeMap();
         return newMarker;
     }
+    Marker tempMarker;
+    public void displayTempMarker(Coordinate position) {
+        tempMarker = Marker.createProvided(Provided.BLUE)
+                .setPosition(position)
+                .setVisible(true);
+        mapPane.addMarker(tempMarker);
+    }
+    public void hideTempMarker() {
+        mapPane.removeMarker(tempMarker);
+    }
 
     public void removeMarker(Marker marker) {
         mapPane.removeMarker(marker);
@@ -68,11 +78,16 @@ public class CalendarStreetGUI extends Application {
 					schedule.update(event);
 				}).setOnHiding(f -> updateMyEvents());
 			});
+			eventSlot.setOnMouseEntered(e->{
+				displayTempMarker(eventSlot.event.getLocation());
+			});
+			eventSlot.setOnMouseExited(e->{
+				hideTempMarker();
+			});
 			myEventsPane.getChildren().add(eventSlot);
 			addMarker(schedule.get(i).getLocation(),schedule.get(i).getName());
 		}
     }
-   
 
 	@Override
 	public void start(Stage primaryStage) {
