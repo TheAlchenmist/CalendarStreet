@@ -5,12 +5,17 @@ import javafx.stage.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.geometry.Pos;
+
+import java.util.List;
+
 import com.sothawo.mapjfx.*;
+import com.sothawo.mapjfx.Marker.Provided;
 
 public class CalendarStreetGUI extends Application{
 
-	MapView mapPane;
-	
+    MapView mapPane;
+    List<Marker> markers;
+
     BorderPane mainPane;
     GridPane calPane;
     HBox togglePane;
@@ -18,6 +23,32 @@ public class CalendarStreetGUI extends Application{
     Button addEventButton;
     Label calStrLabel, myEventsLabel, nearbyEvLabel;
     ScrollPane scrollPane;
+
+    public Marker addMarker(Coordinate position) {
+        Marker newMarker = Marker.createProvided(Provided.RED)
+                                 .setPosition(position)
+                                 .setVisible(true);
+        mapPane.addMarker(newMarker);
+        markers.add(newMarker);
+        resizeMap();
+
+        return newMarker;
+    }
+
+    public void removeMarker(Marker marker) {
+        mapPane.removeMarker(marker);
+        markers.remove(marker);
+        resizeMap();
+    }
+
+    private void resizeMap() {
+        Coordinate coords[] = new Coordinate[markers.size()];
+        for (int i = 0; i < coords.length; i++)
+            coords[i] = markers.get(i).getPosition();
+        Extent wholeMap = Extent.forCoordinates(coords);
+
+        mapPane.setExtent(wholeMap);
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
