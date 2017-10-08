@@ -11,7 +11,6 @@ import java.net.*;
 import java.nio.charset.Charset;
 import java.io.*;
 
-
 public class Event{
     private Date startTime,endTime;
     private String name, desc, address;
