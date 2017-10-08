@@ -49,20 +49,22 @@ public class CalendarStreetGUI extends Application {
             coords[i] = markers.get(i).getPosition();
 
         if (coords.length > 1) {
-        	    Extent wholeMap = Extent.forCoordinates(coords);
+            Extent wholeMap = Extent.forCoordinates(coords);
             mapPane.setExtent(wholeMap);
         } else {
-        	    mapPane.setCenter(coords[0]);
+            mapPane.setCenter(coords[0]);
         }
 
     }
     public void updateMyEvents() {
-    		markers.clear();
-    		myEventsPane.getChildren().clear();
+        markers.clear();
+        myEventsPane.getChildren().clear();
 		for (int i = 0; i < schedule.size(); i++) {
 			EventSlot eventSlot = new EventSlot(schedule.get(i));
 			eventSlot.setOnMouseClicked(e -> {
-				new NewEventWindow(event -> {
+			    Event oldEvent = ((EventSlot)e.getSource()).event;
+				new EventDetail(oldEvent, event -> {
+				    event.setId(oldEvent.getId());
 					schedule.update(event);
 					updateMyEvents();
 				});
@@ -146,7 +148,7 @@ public class CalendarStreetGUI extends Application {
 		addEventButton.setPrefWidth(calPane.getPrefWidth());
 		addEventButton.setAlignment(Pos.CENTER);
 		addEventButton.setOnAction(e -> {
-			new NewEventWindow(event -> {
+			new EventDetail(event -> {
 				schedule.add(event);
 				updateMyEvents();
 			});

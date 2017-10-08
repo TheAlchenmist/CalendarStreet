@@ -67,20 +67,23 @@ public class Database {
     }
 
     public static List<Event> getEvents() {
-        String sql = "SELECT Name, Description, StartTime, EndTime, Latitude, Longitude, Address FROM Events";
+        String sql = "SELECT id, Name, Description, StartTime, EndTime, Latitude, Longitude, Address FROM Events";
 
         List<Event> results = new ArrayList<Event>();
         try (Connection conn = DriverManager.getConnection(url);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
+            Event current;
             while (rs.next()) {
-                results.add(new Event(rs.getDate("StartTime"),
-                                      rs.getDate("EndTime"),
-                                      rs.getString("Name"),
-                                      rs.getString("Description"),
-                                      rs.getString("Address"),
-                                      new Coordinate(rs.getDouble("Latitude"),
-                                                     rs.getDouble("Longitude"))));
+                current = new Event(rs.getDate("StartTime"),
+                                    rs.getDate("EndTime"),
+                                    rs.getString("Name"),
+                                    rs.getString("Description"),
+                                    rs.getString("Address"),
+                                    new Coordinate(rs.getDouble("Latitude"),
+                                                   rs.getDouble("Longitude")));
+                current.setId(rs.getInt("id"));
+                results.add(current);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

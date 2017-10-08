@@ -13,8 +13,12 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class EventSlot extends GridPane {
+	public Event event;
 	private Label titleLabel,timeLabel,dateLabel,locationLabel;
+
 	public EventSlot(Event event) {
+	    this.event = event;
+
 		titleLabel = new Label(event.getName());
 		titleLabel.setWrapText(true);
 		titleLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
