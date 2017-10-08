@@ -12,6 +12,5 @@ public class EventSlot extends GridPane {
 		this.add(titleLabel, 0, 0);
 		this.add(timeLabel, 0, 1);
 		this.add(locationLabel, 0, 2);
-		
 	}
 }

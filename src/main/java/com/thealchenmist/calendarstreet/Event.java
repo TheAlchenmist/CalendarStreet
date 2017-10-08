@@ -24,7 +24,6 @@ public class Event{
         this.desc = desc;
         this.location = location;
         this.address = address;
-
     }
     
     public static Coordinate geocode(String search) throws MalformedURLException,IOException,ParseException {
