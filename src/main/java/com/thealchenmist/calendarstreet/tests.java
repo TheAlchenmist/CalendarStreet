@@ -15,7 +15,8 @@ public class tests {
 	public void test() throws MalformedURLException, IOException, ParseException {
 		Coordinate anneArundel = Event.geocode("Anne Arundel Hall,College Park,Maryland");
 		System.out.println(anneArundel.getLatitude()+" "+anneArundel.getLongitude());
-		assertTrue(anneArundel == new Coordinate(38.98594005,-76.94673185));
+		assertEquals("", 38.98594005, anneArundel.getLatitude(), .0000001);
+		assertEquals("", -76.94673185, anneArundel.getLongitude(), .0000001);
 	}
 
 }
