@@ -191,7 +191,7 @@ public class CalendarStreetGUI extends Application {
 		});
 
 		Scene scene = new Scene(mainPane, sceneWidth, sceneHeight);
-		primaryStage.setTitle("Calendar Street");
+		primaryStage.setTitle("MapUrDay");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
