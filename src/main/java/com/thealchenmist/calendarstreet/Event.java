@@ -27,7 +27,7 @@ public class Event implements Comparable<Event>{
 
     }
    
-    public String convertString(String original) {
+    public static String convertString(String original) {
     		String replaced = original.replace(" ", "%20");
     		replaced = replaced.replace(",","%2C");
     		return replaced;
@@ -35,9 +35,9 @@ public class Event implements Comparable<Event>{
     
     public static Coordinate geocode(String search) throws MalformedURLException,IOException,ParseException {
     		JSONParser parser = new JSONParser();
-    		//String realString = convertString(search);
-    		URL geoUrl = new URL("http://nominatim.openstreetmap.org/search.php?q=anne+arundel+hall%2C+college+park%2C+maryland&polygon_geojson=1&viewbox=&format=json");
-    		
+    		String realString = convertString(search);
+    		URL geoUrl = new URL("http://nominatim.openstreetmap.org/search.php?q="+realString+"&format=json");
+    		System.out.println(geoUrl);
     		URLConnection geoUrlc = geoUrl.openConnection();
     		InputStream geoIs = geoUrl.openStream();
     		//BufferedReader geoRead = new BufferedReader(new InputStreamReader(geoIs,Charset.forName("UTF-8")));

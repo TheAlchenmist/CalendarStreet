@@ -13,7 +13,7 @@ public class tests {
 
 	@Test
 	public void test() throws MalformedURLException, IOException, ParseException {
-		Coordinate anneArundel = Event.geocode("Anne%20Arundel%20Hall,%20College%20Park,%20Maryland");
+		Coordinate anneArundel = Event.geocode("Anne Arundel Hall,College Park,Maryland");
 		assertTrue(anneArundel == new Coordinate(38.98594005,-76.94673185));
 	}
 
