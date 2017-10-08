@@ -54,6 +54,7 @@ public class EventDetail extends Stage{
 			Database.deleteEvent(editing.getId());
 			this.close();
 		});
+		pane.getChildren().remove(done);
 		HBox doneDelete = new HBox(65);
 		doneDelete.setAlignment(Pos.CENTER);
 		doneDelete.getChildren().addAll(done,delete);
