@@ -168,6 +168,7 @@ public class NewEventWindow extends Stage{
 				return;
 			}
 			this.addEvent.accept(event);
+			this.close();
 		});
 		Button cancel = new Button("Cancel");
 		cancel.setOnAction(e -> {
