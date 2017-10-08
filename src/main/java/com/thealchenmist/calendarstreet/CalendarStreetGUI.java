@@ -43,7 +43,7 @@ public class CalendarStreetGUI extends Application {
         mapPane.addMarker(tempMarker);
     }
     public void hideTempMarker() {
-    		tempMarker.setVisible(false);
+        mapPane.removeMarker(tempMarker);
     }
 
     public void removeMarker(Marker marker) {
