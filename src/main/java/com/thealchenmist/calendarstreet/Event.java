@@ -26,24 +26,38 @@ public class Event{
         this.address = address;
 
     }
+   
+    public String convertString(String original) {
+    		String replaced = original.replace(" ", "%20");
+    		replaced = replaced.replace(",","%2C");
+    		return replaced;
+    }
     
     public static Coordinate geocode(String search) throws MalformedURLException,IOException,ParseException {
     		JSONParser parser = new JSONParser();
-    		URL geoUrl = new URL("http://nominatim.openstreetmap.org/search?" + search+"&format=json");
+    		//String realString = convertString(search);
+    		URL geoUrl = new URL("http://nominatim.openstreetmap.org/search.php?q=anne+arundel+hall%2C+college+park%2C+maryland&polygon_geojson=1&viewbox=&format=json");
     		
     		URLConnection geoUrlc = geoUrl.openConnection();
     		InputStream geoIs = geoUrl.openStream();
-    		// BufferedReader geoRead = new BufferedReader(new InputStreamReader(geoIs,Charset.forName("UTF-8")));
+    		//BufferedReader geoRead = new BufferedReader(new InputStreamReader(geoIs,Charset.forName("UTF-8")));
     		Scanner geoScanner = new Scanner(geoIs).useDelimiter("\\A");
     		String geoString = geoScanner.hasNext() ? geoScanner.next():"";
-    		
+    		//String geoString = readAll(geoRead);
     		JSONParser geoParser = new JSONParser();
-    		JSONObject geoObject = (JSONObject)(parser.parse(geoString));
+    		JSONArray newArray = (JSONArray) geoParser.parse(geoString);
+    		String objLat = (String) ((JSONObject)newArray.get(0)).get("lat");
+    		String objLon = (String) ((JSONObject)newArray.get(0)).get("lon");
+    		System.out.println(geoParser.parse(geoString));
+    		System.out.println(geoString);
+    		
+    		System.out.println(objLat+ " "+objLon);
+    		JSONObject geoObject =  (JSONObject)geoParser.parse(geoString);
     		String sLatitude = (String) geoObject.get("lat");
     		String sLongitude = (String) geoObject.get("lon");
     		
-    		double lattitude = Double.parseDouble(sLatitude);
-    		double longitude = Double.parseDouble(sLongitude);
+    		double lattitude = Double.parseDouble(objLat);
+    		double longitude = Double.parseDouble(objLon);
     		
     		return new Coordinate(lattitude,longitude);
     }
