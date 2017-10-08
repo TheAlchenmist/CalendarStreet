@@ -7,7 +7,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
 import javafx.geometry.Pos;
 
 import java.util.ArrayList;
@@ -72,7 +71,8 @@ public class CalendarStreetGUI extends Application {
     public void updateMyEvents() {
         for (Marker marker : markers) mapPane.removeMarker(marker);
         markers.clear();
-        myEventsPane.getChildren().clear();
+        for (int i = 0; i < myEventsPane.getChildren().size(); i++)
+            myEventsPane.getChildren().remove(i);
 		for (int i = 0; i < schedule.size(); i++) {
 			EventSlot eventSlot = new EventSlot(schedule.get(i));
 			eventSlot.setOnMouseClicked(e -> {
