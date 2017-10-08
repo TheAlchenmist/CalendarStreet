@@ -23,12 +23,12 @@ public class CalendarStreetGUI extends Application {
         Marker newMarker = Marker.createProvided(Provided.RED)
                                  .setPosition(position)
                                  .setVisible(true);
-        mapPane.addMarker(newMarker);
         
         MapLabel label = new MapLabel(title, 10, -10);
         label.setVisible(true);
         newMarker.attachLabel(label); //this works in my head but not irl idk 
         markers.add(newMarker);
+        mapPane.addMarker(newMarker);
         
         resizeMap();
         return newMarker;
