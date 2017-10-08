@@ -32,6 +32,17 @@ public class Schedule extends LinkedList<Event> {
         return added;
     }
     
+    @Override
+    public Event remove(int eventId) {
+        Database.deleteEvent(eventId);
+        for (int i = 0; i < this.size(); i++) {
+            if (get(i).getId() == this.get(i).getId()) {
+                return super.remove(i);
+            }
+        }
+        return null;
+    }
+
     public void update(Event e) {
         for (int i = 0; i < this.size(); i++) {
             if (e.getId() == this.get(i).getId()) {

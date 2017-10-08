@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class EventDetail extends Stage{
@@ -26,8 +27,8 @@ public class EventDetail extends Stage{
 	private Button done;
 	private GridPane pane;
 	
-	public EventDetail(Event editing, Consumer<Event> updateEvent) {
-		this(updateEvent);
+	public EventDetail(List<Event> schedule, Event editing, Consumer<Event> updateEvent) {
+		this(schedule, updateEvent);
 		
 		title.setText(editing.getName());
 		
@@ -48,10 +49,10 @@ public class EventDetail extends Stage{
 		
 		address.setText(editing.getAddress());
 		description.setText(editing.getDesc());
+
 		Button delete = new Button("Delete");
 		delete.setOnAction(e -> {
-			System.out.println(editing.getId());
-			Database.deleteEvent(editing.getId());
+		    schedule.remove(editing.getId());
 			this.close();
 		});
 		pane.getChildren().remove(done);
@@ -62,7 +63,7 @@ public class EventDetail extends Stage{
 	}
 	
 	
-	public EventDetail(Consumer<Event> addEvent) {
+	public EventDetail(List<Event> schedule, Consumer<Event> addEvent) {
 		this.addEvent = addEvent;
 		this.setResizable(false);
 

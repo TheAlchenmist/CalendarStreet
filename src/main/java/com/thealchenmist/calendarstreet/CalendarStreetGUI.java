@@ -63,7 +63,7 @@ public class CalendarStreetGUI extends Application {
 			EventSlot eventSlot = new EventSlot(schedule.get(i));
 			eventSlot.setOnMouseClicked(e -> {
 			    Event oldEvent = ((EventSlot)e.getSource()).event;
-				new EventDetail(oldEvent, event -> {
+				new EventDetail(schedule, oldEvent, event -> {
 				    event.setId(oldEvent.getId());
 					schedule.update(event);
 				}).setOnHiding(f -> updateMyEvents());
@@ -147,7 +147,7 @@ public class CalendarStreetGUI extends Application {
 		addEventButton.setPrefWidth(calPane.getPrefWidth());
 		addEventButton.setAlignment(Pos.CENTER);
 		addEventButton.setOnAction(e -> {
-			new EventDetail(event -> {
+			new EventDetail(schedule, event -> {
 				schedule.add(event);
 				updateMyEvents();
 			});
