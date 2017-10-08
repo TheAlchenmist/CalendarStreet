@@ -1,4 +1,6 @@
 import javafx.application.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.stage.*;
@@ -16,7 +18,7 @@ public class CalendarStreetGUI extends Application {
     
     MapView mapPane;
     List<Marker> markers = new ArrayList<Marker>();
-    Schedule schedule = new Schedule();
+    Schedule schedule;
     private VBox myEventsPane;
 
     public Marker addMarker(Coordinate position, String title) {
@@ -73,8 +75,11 @@ public class CalendarStreetGUI extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		int sceneWidth = 800, sceneHeight = 500;
+		Database.connectToDatabase();
+		Database.createNewTable();
 		schedule = new Schedule();
+
+		int sceneWidth = 800, sceneHeight = 500;
 
 		// Main pane that lies in primary stage
 		BorderPane mainPane = new BorderPane();
@@ -151,6 +156,15 @@ public class CalendarStreetGUI extends Application {
 		calPane.add(togglePane, 0, 1);
 		calPane.add(myEvScrollPane, 0, 2);
 		calPane.add(addEventButton, 0, 3);
+		
+		mapPane.initializedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    updateMyEvents();
+                }
+            }
+		});
 
 		Scene scene = new Scene(mainPane, sceneWidth, sceneHeight);
 		primaryStage.setTitle("Calendar Street");

@@ -34,8 +34,8 @@ public class Database {
                      "Description VARCHAR(255), \n" +
                      "StartTime DATETIME, \n" +
                      "EndTime DATETIME, \n" +
-                     "Latitude DOUBLE PRECISION \n" +
-                     "Longitude DOUBLE PRECISION \n" +
+                     "Latitude DOUBLE PRECISION, \n" +
+                     "Longitude DOUBLE PRECISION, \n" +
                      "Address VARCHAR(255)\n" +
                      ");";
         try (Connection conn = DriverManager.getConnection(url);
