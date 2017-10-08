@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="src/main/java/com/thealchenmist/calendarstreet"/>
 	<classpathentry kind="lib" path="libs/mapjfx-1.13.2.jar"/>
 	<classpathentry kind="lib" path="libs/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="libs/sqlite-jdbc-3.20.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
