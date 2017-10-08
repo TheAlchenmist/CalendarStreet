@@ -27,8 +27,10 @@ public class tests {
 		String search = "Prince Frederick, College Park, Maryland";
 		Coordinate coor = Event.geocode(search);
 		Database.insertEvent(newDate,oldDate, "hi","meh",search,coor);
-		//Database.getEvent();
-		Database.updateEvent(newDate,oldDate, "hi","lol",search,coor);
+		Database.insertEvent(newDate,oldDate, "hey","meh",search,coor);
+		Database.getEvent();
+		Database.updateEvent(4,newDate,oldDate, "hi","lol",search,coor);
+		
 	}
 	
 

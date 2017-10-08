@@ -5,26 +5,12 @@ import com.sothawo.mapjfx.Coordinate;
 
 public class Database {
 	
-	private Connection connect() {
-        // SQLite connection string
-        String url = "jdbc:sqlite:C://sqlite/db/test.db";
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection(url);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return conn;
-    }
-	
 	public static void createNewDatabase() {
 		String url = "jdbc:sqlite:";
 		
 		try(Connection conn = DriverManager.getConnection(url)){
 			if (conn!=null) {
 				DatabaseMetaData meta = conn.getMetaData();
-				System.out.println("The driver name is " + meta.getDriverName());
-				System.out.println("A new database has been created.");
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -37,10 +23,9 @@ public class Database {
 			String url = "jdbc:sqlite:event.db";
 			
 			conn = DriverManager.getConnection(url);
-			System.out.println("Connected");
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
-			createNewDatabase(); //Double check this
+			createNewDatabase();
 		}finally {
 			try {
 				if(conn!=null){
@@ -56,7 +41,8 @@ public class Database {
 		String url = "jdbc:sqlite:event.db";
 		
 		String sql = "CREATE TABLE IF NOT EXISTS Events (\n"
-				+ "name text PRIMARY KEY, \n"
+				+ "id integer PRIMARY KEY AUTOINCREMENT, \n"
+				+ "name text, \n"
 				+ "Description text, \n"
 				+ "StartTime blob, \n"
 				+ "EndTime blob, \n"
@@ -65,15 +51,12 @@ public class Database {
 				+");";
 		try (Connection conn = DriverManager.getConnection(url);
                 Statement stmt = conn.createStatement()) {
-            // create a new table
             stmt.execute(sql);
-            System.out.println("MAde it");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 	}
 	
-	//PASS ONLY EVENTS OBJECT????!?!
 	public static void insertEvent(Date startTime, Date endTime, String Name, String desc, String address, Coordinate location) {
 		String url = "jdbc:sqlite:event.db";
 		String sql = "INSERT INTO Events(name,Description,StartTime,EndTime,Coordinates,Address)"
@@ -86,8 +69,7 @@ public class Database {
             pstmt.setObject(4, endTime);
             pstmt.setObject(5, location);
             pstmt.setString(6, address);
-			pstmt.executeUpdate(); //didnt do set stuff see if this works
-            System.out.println("Created it");
+			pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -99,21 +81,16 @@ public class Database {
 		try(Connection conn = DriverManager.getConnection(url);
 				Statement stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(sql)){
-			while(rs.next()) {
-				//for debugging
-				 System.out.println(rs.getString("hi"));
-			}
 		}catch(SQLException e) {
 			System.out.println(e.getMessage());;
 		}
 	}
-	
-	//PASS ONLY EVENTS OBJECT????!?!
-		public static void updateEvent(Date startTime, Date endTime, String name, String desc, String address, Coordinate location) {
+
+		public static void updateEvent(int id, Date startTime, Date endTime, String name, String desc, String address, Coordinate location) {
 			String url = "jdbc:sqlite:event.db";
 			String sql = "UPDATE Events SET name=?, Description = ? ,"
 					+ "StartTime = ?, EndTime = ?,"
-					+ "Coordinates = ?,Address = ?";
+					+ "Coordinates = ?,Address = ? WHERE id = ?";
 			try (Connection conn = DriverManager.getConnection(url);
 	                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 				pstmt.setString(1, name);
@@ -122,17 +99,19 @@ public class Database {
 	            pstmt.setObject(4, endTime);
 	            pstmt.setObject(5, location);
 	            pstmt.setString(6, address);
-				pstmt.executeUpdate(); //didnt do set stuff see if this works
+	            pstmt.setInt(7, id);
+				pstmt.executeUpdate();
 	        } catch (SQLException e) {
 	            System.out.println(e.getMessage());
 	        }
 		}
 		
-		public static void deleteEvent(String name) {
-			String sql = "DELETE FROM Events WHERE name = name";
+		public static void deleteEvent(int id) {
+			String sql = "DELETE FROM Events WHERE id = ?";
 			String url = "jdbc:sqlite:event.db";
 			try(Connection conn = DriverManager.getConnection(url);
 					PreparedStatement pstmt = conn.prepareStatement(sql)){
+				pstmt.setInt(1, id);
 				pstmt.executeUpdate();
 			}catch(SQLException e) {
 				System.out.println(e.getMessage());
