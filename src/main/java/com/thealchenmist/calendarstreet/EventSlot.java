@@ -1,6 +1,9 @@
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import com.sothawo.mapjfx.Marker;
+import com.sothawo.mapjfx.Marker.Provided;
+
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
