@@ -72,15 +72,20 @@ public class NewEventWindow extends Stage{
 		description = new TextArea();
 		description.setWrapText(true);
 
-		ObservableList<String> opts = 
+		ObservableList<String> opts1 = 
 			    FXCollections.observableArrayList(
 			        "AM",
 			        "PM"
 			    );
-		final ComboBox<String> amPmStart = new ComboBox<String>(opts);
+		ObservableList<String> opts2 = 
+			    FXCollections.observableArrayList(
+			        "AM",
+			        "PM"
+			    );
+		final ComboBox<String> amPmStart = new ComboBox<String>(opts1);
 		amPmStart.setVisibleRowCount(2);
 		amPmStart.getSelectionModel().selectFirst();
-		final ComboBox<String> amPmEnd = new ComboBox<String>(opts);
+		final ComboBox<String> amPmEnd = new ComboBox<String>(opts2);
 		amPmEnd.setVisibleRowCount(2);
 		amPmEnd.getSelectionModel().selectFirst();
 		
@@ -100,7 +105,7 @@ public class NewEventWindow extends Stage{
 		
 		Label startDateLabel = new Label("Start Date (m/d/yy): ");
 		Label endDateLabel = new Label("End Date (m/d/yy): ");
-		ObservableList<String> options = 
+		ObservableList<String> options1 = 
 			    FXCollections.observableArrayList(
 			        "Jan",
 			        "Feb",
@@ -115,9 +120,24 @@ public class NewEventWindow extends Stage{
 			        "Nov",
 			        "Dec"
 			    );
-		final ComboBox<String> startMonth = new ComboBox<String>(options);
+		ObservableList<String> options2 = 
+			    FXCollections.observableArrayList(
+			        "Jan",
+			        "Feb",
+			        "Mar",
+			        "Apr",
+			        "May",
+			        "June",
+			        "Jul",
+			        "Aug",
+			        "Sept",
+			        "Oct",
+			        "Nov",
+			        "Dec"
+			    );
+		final ComboBox<String> startMonth = new ComboBox<String>(options1);
 		startMonth.setVisibleRowCount(5);
-		final ComboBox<String> endMonth = new ComboBox<String>(options);
+		final ComboBox<String> endMonth = new ComboBox<String>(options2);
 		endMonth.setVisibleRowCount(5);
 		
 		//get current month to set default month selection in combobox
@@ -154,21 +174,23 @@ public class NewEventWindow extends Stage{
 			//startDate string
 			String times[] = startTime.getText().split(":");
 			cal.set(Integer.parseInt("20" + (Integer.parseInt(startYear.getText()) < 10 ? "0" + startYear.getText() : startYear.getText())),
-					options.indexOf(startMonth.getValue()),
-					Integer.parseInt(startDay.getText()),
-					Integer.parseInt(times[0]),
-					(times.length > 1) ? Integer.parseInt(times[1]) : 0);
-
+					options1.indexOf(startMonth.getValue()),
+					Integer.parseInt(startDay.getText()));
+			int time = Integer.parseInt(times[0]);
+			cal.set(Calendar.HOUR_OF_DAY, (amPmStart.getValue().equals("AM") ? time : time+12));
+			cal.set(Calendar.MINUTE, (times.length > 1) ? Integer.parseInt(times[1]) : 0);
+			
 			Date startDate = cal.getTime();
 			
 			//endDate string
 			times = endTime.getText().split(":");
 			cal.set(Integer.parseInt("20" + (Integer.parseInt(endYear.getText()) < 10 ? "0" + endYear.getText() : endYear.getText())),
-					options.indexOf(endMonth.getValue()),
-					Integer.parseInt(endDay.getText()),
-					Integer.parseInt(times[0]),
-					(times.length > 1) ? Integer.parseInt(times[1]) : 0);
-
+					options2.indexOf(endMonth.getValue()),
+					Integer.parseInt(endDay.getText()));
+			time = Integer.parseInt(times[0]);
+			cal.set(Calendar.HOUR_OF_DAY, (amPmEnd.getValue().equals("AM") ? time : time+12));
+			cal.set(Calendar.MINUTE, (times.length > 1) ? Integer.parseInt(times[1]) : 0);
+			
 			Date endDate = cal.getTime();
 
 			/*System.out.println(startDateString.toString());
