@@ -13,12 +13,7 @@ import java.util.Calendar;
 
 public class newEventWindow extends Stage{
 	
-	private Scene scene;
-	private GridPane pane;
-	private Label titleLabel, startTimeLabel, endTimeLabel, startDateLabel, endDateLabel, addressLabel;
 	private TextField title, startTime, endTime, startDay, endDay, startYear, endYear, address;
-	private Button done, cancel;
-	private final ComboBox<String> startMonth, endMonth, amPmStart, amPmEnd;
 	
 	public newEventWindow() {
 		int sceneWidth = 393, sceneHeight = 250;
@@ -28,7 +23,7 @@ public class newEventWindow extends Stage{
 		Calendar now = Calendar.getInstance();
 		
 		/* Setting pane properties */
-		pane = new GridPane();
+		GridPane pane = new GridPane();
 		pane.setHgap(horSpaceBetweenNodes);
 		pane.setVgap(verSpaceBetweenNodes);
 		pane.setPadding(new Insets(paneBorderTop, paneBorderRight, 
@@ -37,42 +32,37 @@ public class newEventWindow extends Stage{
 		//pane.getColumnConstraints().add(new ColumnConstraints(150));
 		pane.setPrefSize(sceneWidth, sceneHeight);
 		
-		titleLabel = new Label("Event Name:");
+		Label titleLabel = new Label("Event Name:");
 		title = new TextField();
-		pane.add(titleLabel, 0, 0);
-		pane.add(title, 1, 0);
 		
 		ObservableList<String> opts = 
 			    FXCollections.observableArrayList(
 			        "AM",
 			        "PM"
 			    );
-		amPmStart = new ComboBox<String>(opts);
+		final ComboBox<String> amPmStart = new ComboBox<String>(opts);
 		amPmStart.setVisibleRowCount(2);
 		amPmStart.getSelectionModel().selectFirst();
-		amPmEnd = new ComboBox<String>(opts);
+		final ComboBox<String> amPmEnd = new ComboBox<String>(opts);
 		amPmEnd.setVisibleRowCount(2);
 		amPmEnd.getSelectionModel().selectFirst();
 		
-		startTimeLabel = new Label("Start time:");
+		Label startTimeLabel = new Label("Start time:");
 		FlowPane startPane = new FlowPane();
 		startTime = new TextField();
 		startTime.setPrefWidth(90);
 		startPane.setHgap(5);
 		startPane.getChildren().addAll(startTime, amPmStart);
-		pane.add(startTimeLabel, 0, 1);
-		pane.add(startPane, 1, 1);
-		endTimeLabel = new Label("End time: ");
+		
+		Label endTimeLabel = new Label("End time: ");
 		FlowPane endPane = new FlowPane();
 		endTime = new TextField();
 		endTime.setPrefWidth(90);
 		endPane.setHgap(5);
 		endPane.getChildren().addAll(endTime, amPmEnd);
-		pane.add(endTimeLabel, 0, 2);
-		pane.add(endPane, 1, 2);
 		
-		startDateLabel = new Label("Start Date (m/d/y): ");
-		endDateLabel = new Label("End Date (m/d/y): ");
+		Label startDateLabel = new Label("Start Date (m/d/y): ");
+		Label endDateLabel = new Label("End Date (m/d/y): ");
 		ObservableList<String> options = 
 			    FXCollections.observableArrayList(
 			        "Jan",
@@ -88,9 +78,9 @@ public class newEventWindow extends Stage{
 			        "Nov",
 			        "Dec"
 			    );
-		startMonth = new ComboBox<String>(options);
+		final ComboBox<String> startMonth = new ComboBox<String>(options);
 		startMonth.setVisibleRowCount(5);
-		endMonth = new ComboBox<String>(options);
+		final ComboBox<String> endMonth = new ComboBox<String>(options);
 		endMonth.setVisibleRowCount(5);
 		
 		//get current month to set default month selection in combobox
@@ -117,26 +107,41 @@ public class newEventWindow extends Stage{
 		endDateSelect.setHgap(5);
 		endDateSelect.getChildren().addAll(endMonth,endDay,endYear);
 		
+		Label addressLabel = new Label("Address: ");
+		address = new TextField();
+		
+		Button done = new Button("Done");
+		done.setOnAction(e -> {
+			
+		});
+		Button cancel = new Button("Cancel");
+		cancel.setOnAction(e -> {
+			
+		});
+		
+		pane.add(titleLabel, 0, 0);
+		pane.add(title, 1, 0);
+		pane.add(startTimeLabel, 0, 1);
+		pane.add(startPane, 1, 1);
+		pane.add(endTimeLabel, 0, 2);
+		pane.add(endPane, 1, 2);
 		pane.add(startDateLabel, 0, 3);
 		pane.add(startDateSelect, 1, 3);
 		pane.add(endDateLabel, 0, 4);
 		pane.add(endDateSelect, 1, 4);
-		
-		addressLabel = new Label("Address: ");
-		address = new TextField();
 		pane.add(addressLabel, 0, 5);
 		pane.add(address, 1, 5);
-		
-		done = new Button("Done");
-		cancel = new Button("Cancel");
 		pane.add(done, 1, 6);
 		pane.add(cancel, 0, 6);
+		
 		GridPane.setHalignment(done, HPos.CENTER);
 		GridPane.setHalignment(cancel, HPos.CENTER);
 		
-		scene = new Scene(pane,sceneWidth,sceneHeight);
+		Scene scene = new Scene(pane,sceneWidth,sceneHeight);
 		this.setTitle("New Event");
 		this.setScene(scene);
 		this.show();
 	}
+	
+	
 }

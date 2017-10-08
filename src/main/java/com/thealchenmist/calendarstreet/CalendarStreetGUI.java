@@ -57,7 +57,6 @@ public class CalendarStreetGUI extends Application {
         
         mapPane.setZoom(18);
         mapPane.initialize();
-		
         
         // Right-side calendar and events pane
 		GridPane calPane = new GridPane();
