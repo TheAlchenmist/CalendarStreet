@@ -74,8 +74,8 @@ public class NewEventWindow extends Stage{
 		endPane.setHgap(5);
 		endPane.getChildren().addAll(endTime, amPmEnd);
 		
-		Label startDateLabel = new Label("Start Date (m/d/y): ");
-		Label endDateLabel = new Label("End Date (m/d/y): ");
+		Label startDateLabel = new Label("Start Date (m/d/yy): ");
+		Label endDateLabel = new Label("End Date (m/d/yy): ");
 		ObservableList<String> options = 
 			    FXCollections.observableArrayList(
 			        "Jan",
@@ -168,6 +168,7 @@ public class NewEventWindow extends Stage{
 				return;
 			}
 			this.addEvent.accept(event);
+			this.close();
 		});
 		Button cancel = new Button("Cancel");
 		cancel.setOnAction(e -> {
