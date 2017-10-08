@@ -184,7 +184,7 @@ public class EventDetail extends Stage{
 				event = new Event(startDate, endDate, title.getText(),
 								  description.getText(), address.getText(), 
 								  Event.geocode(address.getText()));
-			} catch (IOException | org.json.simple.parser.ParseException e1) {
+			} catch (IOException | org.json.simple.parser.ParseException | IndexOutOfBoundsException e1) {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error Dialog");
 				alert.setContentText("Address not found.");
