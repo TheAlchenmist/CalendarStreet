@@ -3,6 +3,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -35,8 +37,19 @@ public class CalendarStreetGUI extends Application {
         resizeMap();
         return newMarker;
     }
+    Marker tempMarker;
+    public void displayTempMarker(Coordinate position) {
+        tempMarker = Marker.createProvided(Provided.BLUE)
+                .setPosition(position)
+                .setVisible(true);
+        mapPane.addMarker(tempMarker);
+    }
+    public void hideTempMarker() {
+        mapPane.removeMarker(tempMarker);
+    }
 
     public void removeMarker(Marker marker) {
+        marker.detachLabel();
         mapPane.removeMarker(marker);
         markers.remove(marker);
         resizeMap();
@@ -57,17 +70,23 @@ public class CalendarStreetGUI extends Application {
 
     }
     public void updateMyEvents() {
+        for (Marker marker : markers) mapPane.removeMarker(marker);
         markers.clear();
         myEventsPane.getChildren().clear();
 		for (int i = 0; i < schedule.size(); i++) {
 			EventSlot eventSlot = new EventSlot(schedule.get(i));
 			eventSlot.setOnMouseClicked(e -> {
 			    Event oldEvent = ((EventSlot)e.getSource()).event;
-				new EventDetail(oldEvent, event -> {
+				new EventDetail(schedule, oldEvent, event -> {
 				    event.setId(oldEvent.getId());
 					schedule.update(event);
-					updateMyEvents();
-				});
+				}).setOnHiding(f -> updateMyEvents());
+			});
+            eventSlot.setOnMouseEntered(e -> {
+                displayTempMarker(eventSlot.event.getLocation());
+            });
+            eventSlot.setOnMouseExited(e -> {
+                hideTempMarker();
 			});
 			myEventsPane.getChildren().add(eventSlot);
 			addMarker(schedule.get(i).getLocation(),schedule.get(i).getName());
@@ -101,10 +120,15 @@ public class CalendarStreetGUI extends Application {
 		mainPane.setLeft(calPane);
 
 		// App name and events setting
-		Label calStrLabel = new Label("Calendar Street");
+		Image logo = new Image("MapUrDayLogo.png");
+		ImageView iv = new ImageView();
+		iv.setFitHeight(71);
+		iv.setFitWidth(200);
+		iv.setImage(logo);
+		/*Label calStrLabel = new Label("Calendar Street");
 		calStrLabel.setFont(Font.font("Cambria", 24));
 		calStrLabel.setPrefWidth(calPane.getPrefWidth());
-		calStrLabel.setAlignment(Pos.CENTER);
+		calStrLabel.setAlignment(Pos.CENTER);*/
 		Button myEventsButton = new Button("ME");
 		Button nearbyEvButton = new Button("NEARBY");
 		myEventsButton.setAlignment(Pos.CENTER);
@@ -147,13 +171,13 @@ public class CalendarStreetGUI extends Application {
 		addEventButton.setPrefWidth(calPane.getPrefWidth());
 		addEventButton.setAlignment(Pos.CENTER);
 		addEventButton.setOnAction(e -> {
-			new EventDetail(event -> {
+			new EventDetail(schedule, event -> {
 				schedule.add(event);
 				updateMyEvents();
 			});
 		});
 
-		calPane.add(calStrLabel, 0, 0);
+		calPane.add(iv, 0, 0);
 		calPane.add(togglePane, 0, 1);
 		calPane.add(myEvScrollPane, 0, 2);
 		calPane.add(addEventButton, 0, 3);
@@ -168,7 +192,7 @@ public class CalendarStreetGUI extends Application {
 		});
 
 		Scene scene = new Scene(mainPane, sceneWidth, sceneHeight);
-		primaryStage.setTitle("Calendar Street");
+		primaryStage.setTitle("MapUrDay");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

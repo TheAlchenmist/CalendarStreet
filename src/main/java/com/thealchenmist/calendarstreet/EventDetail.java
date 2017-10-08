@@ -2,18 +2,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class EventDetail extends Stage{
@@ -21,11 +24,14 @@ public class EventDetail extends Stage{
 	private TextField title, startTime, endTime, startDay, endDay, startYear, endYear, address;
 	private TextArea description;
 	private Consumer<Event> addEvent;
+	private Button done;
+	private GridPane pane;
 	
-	public EventDetail(Event editing, Consumer<Event> updateEvent) {
-		this(updateEvent);
+	public EventDetail(List<Event> schedule, Event editing, Consumer<Event> updateEvent) {
+		this(schedule, updateEvent);
 		
 		title.setText(editing.getName());
+		
 		
 		SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm");
 		startTime.setText(localDateFormat.format(editing.getStartTime()));
@@ -43,9 +49,21 @@ public class EventDetail extends Stage{
 		
 		address.setText(editing.getAddress());
 		description.setText(editing.getDesc());
+
+		Button delete = new Button("Delete");
+		delete.setOnAction(e -> {
+		    schedule.remove(editing.getId());
+			this.close();
+		});
+		pane.getChildren().remove(done);
+		HBox doneDelete = new HBox(65);
+		doneDelete.setAlignment(Pos.CENTER);
+		doneDelete.getChildren().addAll(done,delete);
+		pane.add(doneDelete, 1, 7);
 	}
 	
-	public EventDetail(Consumer<Event> addEvent) {
+	
+	public EventDetail(List<Event> schedule, Consumer<Event> addEvent) {
 		this.addEvent = addEvent;
 		this.setResizable(false);
 
@@ -56,7 +74,7 @@ public class EventDetail extends Stage{
 		Calendar now = Calendar.getInstance();
 		
 		/* Setting pane properties */
-		GridPane pane = new GridPane();
+		pane = new GridPane();
 		pane.setHgap(horSpaceBetweenNodes);
 		pane.setVgap(verSpaceBetweenNodes);
 		pane.setPadding(new Insets(paneBorderTop, paneBorderRight, 
@@ -167,7 +185,7 @@ public class EventDetail extends Stage{
 		Label addressLabel = new Label("Address: ");
 		address = new TextField();
 		
-		Button done = new Button("Done");
+		done = new Button("Done");
 		done.setOnAction(e -> {
 			Calendar cal = Calendar.getInstance();
 
@@ -206,7 +224,7 @@ public class EventDetail extends Stage{
 				event = new Event(startDate, endDate, title.getText(),
 								  description.getText(), address.getText(), 
 								  Event.geocode(address.getText()));
-			} catch (IOException | org.json.simple.parser.ParseException e1) {
+			} catch (IOException | org.json.simple.parser.ParseException | IndexOutOfBoundsException e1) {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error Dialog");
 				alert.setContentText("Address not found.");
@@ -235,9 +253,9 @@ public class EventDetail extends Stage{
 		pane.add(endDateSelect, 1, 5);
 		pane.add(addressLabel, 0, 6);
 		pane.add(address, 1, 6);
-		pane.add(done, 1, 7);
 		pane.add(cancel, 0, 7);
-		
+		pane.add(done, 1, 7);
+	
 		GridPane.setHalignment(done, HPos.CENTER);
 		GridPane.setHalignment(cancel, HPos.CENTER);
 		
