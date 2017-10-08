@@ -8,7 +8,7 @@ public class Schedule extends LinkedList<Event>{
 			super.add(e);
 			added = true;
 		} else {
-			for(int i = 0;i<this.size()-1;i++) {
+			for(int i = 0;i<this.size();i++) {
 				if(e.compareTo(this.get(i)) <= 0) {
 					this.add(i, e);
 					added = true;
