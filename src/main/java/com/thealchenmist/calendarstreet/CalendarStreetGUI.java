@@ -136,11 +136,11 @@ public class CalendarStreetGUI extends Application {
 
 		// Two events panes: my events and nearby events, for calendar pane
 		myEventsPane = new VBox();
-		myEventsPane.setPrefSize(calPane.getPrefWidth() - 10, sceneHeight - 86);
+		myEventsPane.setPrefSize(calPane.getPrefWidth() - 10, sceneHeight - 128);
 		ScrollPane myEvScrollPane = new ScrollPane(myEventsPane);
 		VBox nearbyEventsPane = new VBox();
 		nearbyEventsPane.getChildren().add(new Label("nearby events"));
-		nearbyEventsPane.setPrefSize(calPane.getPrefWidth() - 10, sceneHeight - 86);
+		nearbyEventsPane.setPrefSize(calPane.getPrefWidth() - 10, sceneHeight - 128);
 		ScrollPane nearbyEvScrollPane = new ScrollPane(nearbyEventsPane);
 
 		// Toggles the two above event panes
