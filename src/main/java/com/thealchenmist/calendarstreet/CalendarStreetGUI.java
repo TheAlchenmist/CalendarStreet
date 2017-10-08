@@ -6,6 +6,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.geometry.Pos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.sothawo.mapjfx.*;
@@ -14,8 +15,9 @@ import com.sothawo.mapjfx.Marker.Provided;
 public class CalendarStreetGUI extends Application {
     
     MapView mapPane;
-    List<Marker> markers;
-    Schedule schedule;
+    List<Marker> markers = new ArrayList<Marker>();
+    Schedule schedule = new Schedule();
+    private VBox myEventsPane;
 
     public Marker addMarker(Coordinate position) {
         Marker newMarker = Marker.createProvided(Provided.RED)
@@ -34,14 +36,29 @@ public class CalendarStreetGUI extends Application {
         resizeMap();
     }
 
+    // TODO: resizing map with zero markers will raise Illegal Argument
     private void resizeMap() {
         Coordinate coords[] = new Coordinate[markers.size()];
         for (int i = 0; i < coords.length; i++)
             coords[i] = markers.get(i).getPosition();
-        Extent wholeMap = Extent.forCoordinates(coords);
 
-        mapPane.setExtent(wholeMap);
+        if (coords.length > 1) {
+        	    Extent wholeMap = Extent.forCoordinates(coords);
+            mapPane.setExtent(wholeMap);
+        } else {
+        	    mapPane.setCenter(coords[0]);
+        }
+
     }
+    public void updateMyEvents() {
+    		markers.clear();
+    		myEventsPane.getChildren().clear();
+		for(Event e: schedule) {
+			myEventsPane.getChildren().add(new EventSlot(e));
+			addMarker(e.getLocation());
+		}
+    }
+   
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -77,8 +94,7 @@ public class CalendarStreetGUI extends Application {
 		nearbyEvButton.setAlignment(Pos.CENTER);
 
 		// Two events panes: my events and nearby events, for calendar pane
-		VBox myEventsPane = new VBox();
-		myEventsPane.getChildren().add(new Label("my events"));
+		myEventsPane = new VBox();
 		myEventsPane.setPrefSize(calPane.getPrefWidth() - 10, sceneHeight - 86);
 		ScrollPane myEvScrollPane = new ScrollPane(myEventsPane);
 		VBox nearbyEventsPane = new VBox();
@@ -115,9 +131,12 @@ public class CalendarStreetGUI extends Application {
 		addEventButton.setAlignment(Pos.CENTER);
 		addEventButton.setOnAction(e -> {
 			new NewEventWindow(event -> {
+				System.out.println("ay");
 				schedule.add(event);
+				System.out.println("ohway");
+				updateMyEvents();
+				System.out.println("oh no");
 			});
-
 		});
 
 		calPane.add(calStrLabel, 0, 0);

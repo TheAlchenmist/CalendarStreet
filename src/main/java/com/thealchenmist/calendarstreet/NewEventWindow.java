@@ -129,7 +129,7 @@ public class NewEventWindow extends Stage{
 
 			//startDate string
 			String times[] = startTime.getText().split(":");
-			cal.set(Integer.parseInt("20" + startYear.getText()),
+			cal.set(Integer.parseInt("20" + (Integer.parseInt(startYear.getText()) < 10 ? "0" + startYear.getText() : startYear.getText())),
 					options.indexOf(startMonth.getValue()),
 					Integer.parseInt(startDay.getText()),
 					Integer.parseInt(times[0]),
@@ -139,7 +139,7 @@ public class NewEventWindow extends Stage{
 			
 			//endDate string
 			times = endTime.getText().split(":");
-			cal.set(Integer.parseInt("20" + endYear.getText()),
+			cal.set(Integer.parseInt("20" + (Integer.parseInt(endYear.getText()) < 10 ? "0" + endYear.getText() : endYear.getText())),
 					options.indexOf(endMonth.getValue()),
 					Integer.parseInt(endDay.getText()),
 					Integer.parseInt(times[0]),
@@ -167,6 +167,7 @@ public class NewEventWindow extends Stage{
 				alert.showAndWait();
 				return;
 			}
+			System.out.println("about to run addEvent");
 			this.addEvent.accept(event);
 			this.close();
 		});
