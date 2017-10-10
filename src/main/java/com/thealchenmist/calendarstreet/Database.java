@@ -14,15 +14,18 @@ public class Database {
             if (conn != null) {
                 conn.getMetaData();
             }
+            System.out.println("Creating new databaes");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Trouble creating new database: " + e.getMessage());
         }
     }
 
     public static void connectToDatabase() {
-        try (Connection conn = DriverManager.getConnection(url)) { }
+        try (Connection conn = DriverManager.getConnection(url)) {
+            System.out.println("Connecting to database");
+        }
         catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Trouble connecting to database: " + e.getMessage());
             createNewDatabase();
         } 
     }
@@ -41,8 +44,9 @@ public class Database {
         try (Connection conn = DriverManager.getConnection(url);
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
+            System.out.println("Creating new table");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Trouble creating new table: " + e.getMessage());
         }
     }
 
@@ -59,9 +63,12 @@ public class Database {
             pstmt.setDouble(5, location.getLatitude());
             pstmt.setDouble(6, location.getLongitude());
             pstmt.setString(7, address);
+
+            conn.close();
+            System.out.println("Inserting event");
             return pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Trouble inserting event: " + e.getMessage());
         }
         return 0;
     }
@@ -84,8 +91,10 @@ public class Database {
                                                    rs.getDouble("Longitude")));
                 results.add(current);
             }
+
+            System.out.println("Getting events");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Trouble getting events: " + e.getMessage());
         }
         return results;
     }
@@ -106,8 +115,10 @@ public class Database {
             pstmt.setString(7, address);;
             pstmt.setInt(8, id);
             pstmt.executeUpdate();
+
+            System.out.println("Updating events");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Trouble updating events: " + e.getMessage());
         }
     }
 
@@ -117,8 +128,10 @@ public class Database {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
+
+            System.out.println("Deleting events");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Trouble deleting events: " + e.getMessage());
         }
     }
 
