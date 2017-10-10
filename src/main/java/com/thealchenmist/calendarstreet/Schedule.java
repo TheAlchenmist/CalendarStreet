@@ -8,14 +8,6 @@ public class Schedule extends LinkedList<Event> {
 
     @Override
     public boolean add(Event e) {
-        int eventId = Database.insertEvent(e.getStartTime(),
-                                           e.getEndTime(),
-                                           e.getName(),
-                                           e.getDesc(),
-                                           e.getAddress(),
-                                           e.getLocation());
-        e.setId(eventId);
-
         boolean added = false;
         if (this.isEmpty() || e.compareTo(this.getLast()) > 0) {
             super.add(e);

@@ -27,6 +27,7 @@ public class Event implements Comparable<Event> {
 		this.location = location;
 		this.address = address;
 
+		Database.insertEvent(this.startTime, this.endTime, this.name, this.desc, this.address, this.location);
 	}
 
 	public static String convertString(String original) {

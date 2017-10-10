@@ -82,7 +82,6 @@ public class Database {
                                     rs.getString("Address"),
                                     new Coordinate(rs.getDouble("Latitude"),
                                                    rs.getDouble("Longitude")));
-                current.setId(rs.getInt("id"));
                 results.add(current);
             }
         } catch (SQLException e) {
