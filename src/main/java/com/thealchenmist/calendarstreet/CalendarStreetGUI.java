@@ -67,6 +67,8 @@ public class CalendarStreetGUI extends Application {
             mapPane.setCenter(coords[0]);
         }
 
+        if (mapPane.getZoom() < 14) mapPane.setZoom(14);
+
     }
     public void updateMyEvents() {
         for (Marker marker : markers) mapPane.removeMarker(marker);
