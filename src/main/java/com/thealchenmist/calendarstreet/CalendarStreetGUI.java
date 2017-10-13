@@ -10,6 +10,7 @@ import javafx.scene.layout.*;
 import javafx.geometry.Pos;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.sothawo.mapjfx.*;
@@ -33,25 +34,20 @@ public class CalendarStreetGUI extends Application {
         markers.add(newMarker);
         mapPane.addMarker(newMarker);
         
-        resizeMap();
         return newMarker;
     }
-    Marker tempMarker;
+    Marker tempMarker = Marker.createProvided(Provided.BLUE);
     public void displayTempMarker(Coordinate position) {
-        tempMarker = Marker.createProvided(Provided.BLUE)
-                .setPosition(position)
-                .setVisible(true);
-        mapPane.addMarker(tempMarker);
+        tempMarker.setPosition(position)
+                  .setVisible(true);
     }
     public void hideTempMarker() {
-        mapPane.removeMarker(tempMarker);
+        tempMarker.setVisible(false);
     }
 
-    public void removeMarker(Marker marker) {
+    public void detachMarker(Marker marker) {
         marker.detachLabel();
         mapPane.removeMarker(marker);
-        markers.remove(marker);
-        resizeMap();
     }
 
     // TODO: resizing map with zero markers will raise Illegal Argument
@@ -71,10 +67,20 @@ public class CalendarStreetGUI extends Application {
 
     }
     public void updateMyEvents() {
-        for (Marker marker : markers) mapPane.removeMarker(marker);
+        // First delete all of the events on the map right now
+        Iterator<Marker> markerIter = markers.iterator();
+        Marker currMarker;
+        while (markerIter.hasNext()) {
+            currMarker = markerIter.next();
+            detachMarker(currMarker);
+            markerIter.remove();
+        }
         markers.clear();
         for (int i = 0; i < myEventsPane.getChildren().size(); i++)
             myEventsPane.getChildren().remove(i);
+        myEventsPane.getChildren().clear();
+
+        // Then re-populate the events and add markers too.
 		for (int i = 0; i < schedule.size(); i++) {
 			EventSlot eventSlot = new EventSlot(schedule.get(i));
 			eventSlot.setOnMouseClicked(e -> {
@@ -93,6 +99,7 @@ public class CalendarStreetGUI extends Application {
 			myEventsPane.getChildren().add(eventSlot);
 			addMarker(schedule.get(i).getLocation(),schedule.get(i).getName());
 		}
+        resizeMap();
     }
 
 	@Override
@@ -188,6 +195,7 @@ public class CalendarStreetGUI extends Application {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
+                    mapPane.addMarker(tempMarker);
                     updateMyEvents();
                 }
             }
