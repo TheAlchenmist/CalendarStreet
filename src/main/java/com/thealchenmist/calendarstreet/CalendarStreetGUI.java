@@ -67,6 +67,7 @@ public class CalendarStreetGUI extends Application {
 
     }
     public void updateMyEvents() {
+        System.out.println("Updating");
         // First delete all of the events on the map right now
         Iterator<Marker> markerIter = markers.iterator();
         Marker currMarker;
@@ -85,10 +86,7 @@ public class CalendarStreetGUI extends Application {
 			EventSlot eventSlot = new EventSlot(schedule.get(i));
 			eventSlot.setOnMouseClicked(e -> {
 			    Event oldEvent = ((EventSlot)e.getSource()).event;
-				new EventDetail(schedule, oldEvent, event -> {
-				    event.setId(oldEvent.getId());
-					schedule.update(event);
-				}).setOnHiding(f -> updateMyEvents());
+				new EventDetail(schedule, oldEvent).setOnHiding(f -> updateMyEvents());
 			});
             eventSlot.setOnMouseEntered(e -> {
                 displayTempMarker(eventSlot.event.getLocation());
@@ -180,10 +178,7 @@ public class CalendarStreetGUI extends Application {
 		addEventButton.setPrefWidth(calPane.getPrefWidth());
 		addEventButton.setAlignment(Pos.CENTER);
 		addEventButton.setOnAction(e -> {
-			new EventDetail(schedule, event -> {
-				schedule.add(event);
-				updateMyEvents();
-			});
+			new EventDetail(schedule).setOnHiding(f -> updateMyEvents());
 		});
 
 		calPane.add(iv, 0, 0);

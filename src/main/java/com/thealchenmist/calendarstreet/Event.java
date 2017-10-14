@@ -30,6 +30,8 @@ public class Event implements Comparable<Event> {
 		Database.insertEvent(this.startTime, this.endTime, this.name, this.desc, this.address, this.location);
 	}
 
+	public Event() { }
+
 	public static String convertString(String original) {
 		String replaced = original.replace(" ", "%20");
 		replaced = replaced.replace(",", "%2C");
