@@ -83,12 +83,14 @@ public class Database {
              ResultSet rs = stmt.executeQuery(sql)) {
             Event current;
             while (rs.next()) {
-                current = new Event(rs.getDate("StartTime"),
-                                    rs.getDate("EndTime"),
-                                    rs.getString("Name"),
-                                    rs.getString("Description"),
-                                    rs.getString("Address"),
-                                    new Coordinate(rs.getDouble("Latitude"),
+                current = new Event();
+
+                current.setStartTime(rs.getDate("StartTime"));
+                current.setEndTime(rs.getDate("EndTime"));
+                current.setName(rs.getString("Name"));
+                current.setDesc(rs.getString("Description"));
+                current.setAddress(rs.getString("Address"));
+                current.setLocation(new Coordinate(rs.getDouble("Latitude"),
                                                    rs.getDouble("Longitude")));
                 current.setId(rs.getInt("id"));
 
