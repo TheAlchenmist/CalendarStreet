@@ -1,9 +1,14 @@
 import java.util.LinkedList;
+import java.util.List;
 
 @SuppressWarnings(value = "serial")
 public class Schedule extends LinkedList<Event> {
     public Schedule() {
-        super(Database.getEvents());
+        super();
+        List<Event> events = Database.getEvents();
+        for (Event event : events) {
+            this.add(event);
+        }
     }
 
     @Override
