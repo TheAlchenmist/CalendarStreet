@@ -46,7 +46,6 @@ public class CalendarStreetGUI extends Application {
     }
 
     public void detachMarker(Marker marker) {
-        marker.detachLabel();
         mapPane.removeMarker(marker);
     }
 

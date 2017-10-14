@@ -27,7 +27,7 @@ public class Schedule extends LinkedList<Event> {
     public Event remove(int eventId) {
         Database.deleteEvent(eventId);
         for (int i = 0; i < this.size(); i++) {
-            if (get(i).getId() == this.get(i).getId()) {
+            if (get(i).getId() == eventId) {
                 return super.remove(i);
             }
         }
