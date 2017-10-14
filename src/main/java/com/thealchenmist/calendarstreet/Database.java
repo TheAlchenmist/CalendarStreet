@@ -1,6 +1,6 @@
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.sothawo.mapjfx.Coordinate;
@@ -23,8 +23,7 @@ public class Database {
     public static void connectToDatabase() {
         try (Connection conn = DriverManager.getConnection(url)) {
             System.out.println("Connecting to database");
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println("Trouble connecting to database: " + e.getMessage());
             createNewDatabase();
         } 
@@ -42,9 +41,9 @@ public class Database {
                      "Address VARCHAR(255)\n" +
                      ");";
         try (Connection conn = DriverManager.getConnection(url);
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             System.out.println("Creating new table");
+            stmt.execute();
         } catch (SQLException e) {
             System.out.println("Trouble creating new table: " + e.getMessage());
         }
@@ -56,6 +55,7 @@ public class Database {
                 + " VALUES(?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            conn.setAutoCommit(false);
             pstmt.setString(1, Name);
             pstmt.setString(2, desc);
             pstmt.setDate(3, new java.sql.Date(startTime.getTime()));
@@ -64,9 +64,10 @@ public class Database {
             pstmt.setDouble(6, location.getLongitude());
             pstmt.setString(7, address);
 
-            conn.close();
             System.out.println("Inserting event");
-            return pstmt.executeUpdate();
+            int id = pstmt.executeUpdate();
+            conn.commit();
+            return id;
         } catch (SQLException e) {
             System.out.println("Trouble inserting event: " + e.getMessage());
         }
@@ -76,7 +77,7 @@ public class Database {
     public static List<Event> getEvents() {
         String sql = "SELECT id, Name, Description, StartTime, EndTime, Latitude, Longitude, Address FROM Events";
 
-        List<Event> results = new ArrayList<Event>();
+        List<Event> results = new LinkedList<Event>();
         try (Connection conn = DriverManager.getConnection(url);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -89,6 +90,8 @@ public class Database {
                                     rs.getString("Address"),
                                     new Coordinate(rs.getDouble("Latitude"),
                                                    rs.getDouble("Longitude")));
+                current.setId(rs.getInt("id"));
+
                 results.add(current);
             }
 
