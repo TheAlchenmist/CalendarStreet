@@ -49,7 +49,6 @@ public class CalendarStreetGUI extends Application {
         mapPane.removeMarker(marker);
     }
 
-    // TODO: resizing map with zero markers will raise Illegal Argument
     private void resizeMap() {
         Coordinate coords[] = new Coordinate[markers.size()];
         for (int i = 0; i < coords.length; i++)
@@ -58,6 +57,9 @@ public class CalendarStreetGUI extends Application {
         if (coords.length > 1) {
             Extent wholeMap = Extent.forCoordinates(coords);
             mapPane.setExtent(wholeMap);
+        } else if (coords.length == 0) {
+            mapPane.setCenter(new Coordinate(38.98904409121653, -76.94391050000002));
+            mapPane.setZoom(0);
         } else {
             mapPane.setCenter(coords[0]);
         }
