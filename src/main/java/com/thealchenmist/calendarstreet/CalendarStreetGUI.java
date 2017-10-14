@@ -40,9 +40,10 @@ public class CalendarStreetGUI extends Application {
     public void displayTempMarker(Coordinate position) {
         tempMarker.setPosition(position)
                   .setVisible(true);
+        mapPane.addMarker(tempMarker);
     }
     public void hideTempMarker() {
-        tempMarker.setVisible(false);
+        mapPane.removeMarker(tempMarker);
     }
 
     public void detachMarker(Marker marker) {
@@ -191,7 +192,6 @@ public class CalendarStreetGUI extends Application {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
-                    mapPane.addMarker(tempMarker);
                     updateMyEvents();
                 }
             }
